@@ -25,6 +25,32 @@ Congratulations - you can now run the bridge via `ros2 run ros1_bridge dynamic_b
 - `--bridge-all-2to1-topics`
 - `--bridge-all-topics`
 
+### Usage example
+
+For this, you need three separate bashes
+
+In the first bash:
+- Source your melodic environment
+- Execute `roslaunch prbt_moveit_config moveit_planning_execution.launch -p 11311`
+
+In the second bash:
+- Source your melodic environment and your dashing environment
+- Make sure the ROS master is known with `export ROS_MASTER_URI=http://localhost:11311`
+- Execute `ros2 run ros1_bridge dynamic_bridge --bridge-all-topics`
+
+In the third bash:
+- Source your dashing environment
+- Publish to the /joint_states topic, e.g. using `ros2 topic pub /joint_states sensor_msgs/msg/JointState "header:
+  stamp: {sec: 0, nanosec: 0}
+  frame_id: ''
+name: ['prbt_joint_1']
+position: [1]
+velocity: [0]
+effort: [0]"`
+
+Now the manipulator depicted in RViz should move back and forth.
+
+
 ## Related project links
 * [pilz_robots](http://wiki.ros.org/pilz_robots) package and tutorials for getting started with PRBT6 robot manipulator module
 * [jog_arm, currently in moveit_experimental](https://github.com/ros-planning/moveit) used for jogging the manipulator

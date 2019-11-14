@@ -16,5 +16,8 @@
 
   <buildtool_depend>catkin</buildtool_depend>
 
-  <depend>fake_joint_driver</depend>
+  <exec_depend>fake_joint_driver</exec_depend>
+  <exec_depend>pilz_trajectory_generation</exec_depend>
+  <exec_depend>prbt_support</exec_depend>
+  <exec_depend>prbt_moveit_config</exec_depend>
 </package>

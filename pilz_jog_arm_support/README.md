@@ -19,9 +19,10 @@ This Package contains files to launch the prbt with moveit_jog_arm and tork-a/fa
 ## Quick Start
 To test the setup execute following steps:
 1. Start the prbt: 
-
 ```roslaunch pilz_jog_arm_support prbt_jog_arm_sim.launch```
+
 2. Move the robot out of the singularity (e.g. with the Motion Planner Plugin of rviz).
+
 3. Change controllers: 
 ```shell script
 rosservice call /controller_manager/switch_controller "start_controllers:
@@ -30,10 +31,10 @@ stop_controllers:
  ['manipulator_joint_trajectory_controller']
 strictness: 2"
 ```
-4. Start movet_jog_arm: 
 
+4. Start moveit_jog_arm: 
 ```shell script
-roslaunch moveit_jog_arm spacenav_cpp.launch
+roslaunch pilz_jog_arm_support jog_server.launch
 ```
 5. Send test command:
 ```shell script

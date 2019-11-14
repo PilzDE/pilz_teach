@@ -50,6 +50,9 @@ effort: [0]"`
 
 Now the manipulator depicted in RViz should move back and forth.
 
+### ROS2 Eloquent
+
+The beforementioned procedure can analoguously be done with ROS2 Eloquent without any changes.
 
 ## Related project links
 * [pilz_robots](http://wiki.ros.org/pilz_robots) package and tutorials for getting started with PRBT6 robot manipulator module

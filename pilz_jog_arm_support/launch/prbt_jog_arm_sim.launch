@@ -47,14 +47,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   <group if="$(arg sim)">
     <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
 
-    <node name="fake_joint_driver" pkg="fake_joint_driver" type="fake_joint_driver_node"/>
+    <node name="fake_joint_driver" pkg="fake_joint_driver" type="fake_joint_driver_node">
+      <rosparam param="start_position">{prbt_joint_2: -0.2, prbt_joint_3: 1.5, prbt_joint_5: 1.7}</rosparam>
+    </node>
 
     <rosparam file="$(find prbt_support)/config/manipulator_controller.yaml" />
     <rosparam param="/manipulator_joint_trajectory_controller/type">position_controllers/JointTrajectoryController</rosparam>
     <rosparam param="/move_group/controller_list">[{name: "manipulator_joint_trajectory_controller/", action_ns: follow_joint_trajectory, type: FollowJointTrajectory, joints: [prbt_joint_1, prbt_joint_2, prbt_joint_3, prbt_joint_4, prbt_joint_5, prbt_joint_6] } ]</rosparam>
-    <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" args="manipulator_joint_state_controller manipulator_joint_trajectory_controller"/>
+    <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" args="manipulator_joint_state_controller joint_group_position_controller"/>
     <rosparam file="$(find pilz_jog_arm_support)/config/controller.yaml" />
-    <node name="controller_loader" pkg="controller_manager" type="controller_manager" respawn="false" args="load joint_group_position_controller"/>
+    <node name="controller_loader" pkg="controller_manager" type="controller_manager" respawn="false" args="load manipulator_joint_trajectory_controller"/>
   </group>
 
+  <include file="$(find pilz_jog_arm_support)/launch/jog_server.launch" />
 </launch>

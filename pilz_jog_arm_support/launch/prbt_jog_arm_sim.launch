@@ -29,6 +29,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     <arg name="pipeline" value="pilz_command_planner" />
   </include>
 
+  <include file="$(find prbt_moveit_config)/launch/moveit_rviz.launch">
+    <arg name="rviz_config" value="$(find prbt_moveit_config)/launch/moveit.rviz" />
+  </include>
+
 
   <!-- Run the "real robot" interface nodes -->
   <group unless="$(arg sim)">
@@ -53,5 +57,4 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     <node name="controller_loader" pkg="controller_manager" type="controller_manager" respawn="false" args="load joint_group_position_controller"/>
   </group>
 
-  <node name="rviz" pkg="rviz" type="rviz" />
 </launch>

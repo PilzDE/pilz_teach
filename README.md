@@ -5,6 +5,10 @@ pilz_teach is a PRBT6 teaching software module:
 
 It can be used without additional hardware (keyboard-only-mode by default) but has easy interfaces to connect to any external device.
 
+## Disclaimer
+
+Since the ros1_bridge doesn't provide bridging custom topics by now, when installed via binaries, we decided to stop developing this package for ROS2 and wait for a distribution, which supports straightforward bridging of custom messages.
+
 ## Instructions
 
 ### Prerequisites

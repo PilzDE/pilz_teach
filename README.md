@@ -12,6 +12,7 @@ It can be used without additional hardware (keyboard-only-mode by default) but h
 - Install ros-melodic-desktop from binaries, following the [official instructions](http://wiki.ros.org/melodic/Installation/Ubuntu)
 - Install the pilz packages by executing `apt install ros-melodic-pilz-*` and `apt install ros-melodic-prbt-*`
 - Follow the [instructions for building ROS2 dashing from source](https://index.ros.org/doc/ros2/Installation/Dashing/Linux-Development-Setup/), but don't build it yet
+- Create a separate workspace (here called it `dashing_ws`) and put [moveit_msgs](https://github.com/ros-planning/moveit_msgs/tree/ros2), [object_recognition_msgs](https://github.com/AcutronicRobotics/object_recognition_msgs) and [octomap_msgs](https://github.com/AcutronicRobotics/octomap_msgs) into its src folder
 
 ### Build Dashing and the Bridge
 
@@ -24,6 +25,12 @@ Congratulations - you can now run the bridge via `ros2 run ros1_bridge dynamic_b
 - `--bridge-all-1to2-topics`
 - `--bridge-all-2to1-topics`
 - `--bridge-all-topics`
+
+### Build the moveit message definitions
+
+- Go to your `dashing_ws`
+- Execute `colcon build` to build the messages
+- Execute `source ~/dashing_ws/install/local_setup.bash` to source your environment
 
 ### Usage example
 

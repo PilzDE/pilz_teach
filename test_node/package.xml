@@ -3,12 +3,14 @@
 <package format="3">
   <name>test_node</name>
   <version>0.0.0</version>
-  <description>TODO: Package description</description>
-  <maintainer email="tv@todo.todo">tv</maintainer>
+  <description>Package for testing some ROS2 functionalieites</description>
+  <maintainer email="t_vetter@live.de">tv</maintainer>
   <license>TODO: License declaration</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
-
+  
+  <exec_depend>rclcpp</exec_depend>  
+  <exec_depend>std_msgs</exec_depend>
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>
 

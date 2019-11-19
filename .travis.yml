@@ -38,6 +38,7 @@ matrix:
     - env: ROS_REPO=ros
   fast_finish: true
 install:
+  - git clone --depth=1 https://github.com/tork-a/fake_joint && touch fake_joint/fake_joint/CATKIN_IGNORE && touch fake_joint/fake_joint_launch/CATKIN_IGNORE ## not yet available as binary package
   - git clone --depth=1 --branch master https://github.com/ros-industrial/industrial_ci.git .industrial_ci
 script:
   - .industrial_ci/travis.sh

@@ -16,13 +16,13 @@ env:
     - CMAKE_ARGS="-DCATKIN_ENABLE_CLANG_TIDY=true"
     - ADDITIONAL_DEBS="clang-tidy libclang-dev"
   matrix:
-    - CLANG_FORMAT_CHECK=file
+    # - CLANG_FORMAT_CHECK=file
     - ROS_REPO=ros
     - ROS_REPO=testing
-    - ROS_REPO="testing"
-      CATKIN_LINT=false NOT_TEST_BUILD=true
-      AFTER_SCRIPT="./.coverage.sh"
-      CMAKE_ARGS="-DENABLE_COVERAGE_TESTING=ON -DCMAKE_BUILD_TYPE=Debug"
+    #- ROS_REPO="testing"
+    #  CATKIN_LINT=false NOT_TEST_BUILD=true
+    #  AFTER_SCRIPT="./.coverage.sh"
+    #  CMAKE_ARGS="-DENABLE_COVERAGE_TESTING=ON -DCMAKE_BUILD_TYPE=Debug"
       # List of packages which have to be considered for coverage checking:
       # DOCKER_RUN_OPTS='-e COVERAGE_PKGS="pilz_control pilz_utils prbt_hardware_support"'
     # Enable Address sanitizing:

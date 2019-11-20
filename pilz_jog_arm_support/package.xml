@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>pilz_jog_arm_support</name>
+  <version>0.0.1</version>
+  <description>pilz teach joint control</description>
+
+  <maintainer email="j.schleicher@pilz.de">Joachim Schleicher</maintainer>
+  <maintainer email="p.cheray@pilz.de">Philippe Cheray</maintainer>
+  <maintainer email="r.feistenauer@pilz.de">Richard Feistenauer</maintainer>
+  <maintainer email="t.vetter@pilz.de">Tobias Vetter</maintainer>
+
+  <license>LGPLv3</license>
+
+  <url type="bugtracker">https://github.com/PilzDE/pilz_teach/issues</url>
+  <url type="repository">https://github.com/PilzDE/pilz_teach</url>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <exec_depend>fake_joint_driver</exec_depend>
+  <exec_depend>pilz_trajectory_generation</exec_depend>
+  <exec_depend>prbt_support</exec_depend>
+  <exec_depend>controller_manager</exec_depend>
+  <exec_depend>prbt_moveit_config</exec_depend>
+</package>

@@ -23,4 +23,5 @@
   <exec_depend>prbt_moveit_config</exec_depend>
 
   <test_depend>rostest</test_depend>
+  <test_depend>pilz_robot_programming</test_depend>
 </package>

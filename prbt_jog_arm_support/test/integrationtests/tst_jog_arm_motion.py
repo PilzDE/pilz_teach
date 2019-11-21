@@ -16,31 +16,48 @@
 
 import unittest
 from rospkg import RosPack
+from pilz_robot_programming import *
+from geometry_msgs.msg import TwistStamped
 import rospy
 
+__REQUIRED_API_VERSION__ = '1'
 
 class TestJogArmMotion(unittest.TestCase):
     """
-    Test a jog arm motion.
+    Test that the jog arm launch file brings up a simulated robot
+    we can move.
     """
 
     def setUp(self):
         rospy.loginfo("SetUp called...")
+        self.r = Robot(__REQUIRED_API_VERSION__)
 
     def tearDown(self):
         rospy.loginfo("TearDown called...")
 
-    def test_ptp_execution(self):
-        """ Test execution of valid ptp command works successfully.
-
-            Test sequence:
-                1. Execute a valid ptp command
-
-            Test results:
-                1. Move function returns without throwing an exception.
-        """
-        # Execute robot motion via service
-        pass
+    def test_move(self):
+        """ Test,  if the robot moves on sending a twist command message"""
+        # Wait until jog-arm-server is ready
+        # topic: /jog_server/delta_jog_cmds
+        publisher = rospy.Publisher('/jog_server/delta_jog_cmds', TwistStamped)
+        while publisher.get_num_connections() < 1:
+            rospy.sleep(0.1)
+        
+        # get current robot position
+        start_pose = self.r.get_current_pose()
+        
+        # send single command
+        msg = TwistStamped()
+        msg.header.stamp = rospy.Time().now()
+        msg.twist.linear.x = 0.1
+        msg.twist.linear.y = 0.1
+        publisher.publish(msg)
+              
+        # wait until current robot position changes
+        timeout = rospy.Time().now() + rospy.Duration(10.)
+        while(start_pose == self.r.get_current_pose()):
+            rospy.sleep(0.1)
+            self.assertTrue(rospy.Time().now() < timeout, "robot did not move until timeout")
 
 
 if __name__ == '__main__':

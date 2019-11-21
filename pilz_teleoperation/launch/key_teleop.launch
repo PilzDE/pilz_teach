@@ -1,4 +1,3 @@
 <launch>
-    <!--node name="teleop_driver" pkg="pilz_teleoperation" type="pilz_teleop_driver.py" output="screen" /-->
     <node name="key_input" pkg="pilz_teleoperation" type="key_teleop.py" output="screen" />
 </launch>

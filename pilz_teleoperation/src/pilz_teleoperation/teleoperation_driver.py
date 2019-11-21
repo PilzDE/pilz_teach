@@ -8,7 +8,7 @@ import pilz_teleoperation.teleoperation_settings
 class TeleoperationDriver(object):
     KEY_INPUT_TIMEOUT = .1
     HZ = 50
-    MAX_POSITION_SPEED = 2.0 / HZ
+    MAX_POSITION_SPEED = 2.0 / 10
 
     def __init__(self, window):
         super(TeleoperationDriver, self).__init__()
@@ -71,9 +71,9 @@ class TeleoperationDriver(object):
 
     def __project_twist_on_plane(self, twist_lin):
         if self._settings.plane == SetTeleopSettingsRequest.USE_XZ_PLANE:
-            twist_lin.y, twist_lin.z = 0, twist_lin.z
+            twist_lin.y, twist_lin.z = 0, twist_lin.y
         elif self._settings.plane == SetTeleopSettingsRequest.USE_YZ_PLANE:
-            twist_lin.x, twist_lin.y, twist_lin.z = 0, twist_lin.x, twist_lin.z
+            twist_lin.x, twist_lin.y, twist_lin.z = 0, twist_lin.x, twist_lin.y
 
     @staticmethod
     def __norm_twist(twist_lin):

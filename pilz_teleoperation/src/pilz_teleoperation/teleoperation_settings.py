@@ -9,6 +9,7 @@ MAX_VELOCITY_LINEAR = 1.0
 MAX_VELOCITY_ANGULAR = 1.0
 MIN_VELOCITY_LINEAR = 0.1
 MIN_VELOCITY_ANGULAR = 0.1
+MAX_JOG_RANGE = 0.2
 
 
 def _decrease_linear_velocity(settings):
@@ -58,8 +59,9 @@ class TeleoperationSettings:
         self.angular_velocity = 0.5
         self.linear_velocity = 0.5
         self.frame = WORLD_FRAME
-        self.plane = SetTeleopSettingsRequest.USE_XY_PLANE
+        self.movement_projection_plane = SetTeleopSettingsRequest.USE_XY_PLANE
 
     def get_current_plane_string(self):
-        return "XY" if self.plane == SetTeleopSettingsRequest.USE_XY_PLANE \
-                    else ("XZ" if self.plane == SetTeleopSettingsRequest.USE_XZ_PLANE else "YZ")
+        """ returns a string representation of the current plane, the movement takes place on """
+        return "XY" if self.movement_projection_plane == SetTeleopSettingsRequest.USE_XY_PLANE \
+                    else ("XZ" if self.movement_projection_plane == SetTeleopSettingsRequest.USE_XZ_PLANE else "YZ")

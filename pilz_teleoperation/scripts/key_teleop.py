@@ -10,7 +10,7 @@ def main(stdscr):
     win = pilz_teleoperation.TerminalTextWindow(stdscr)
     driver = pilz_teleoperation.TeleoperationDriver(win)
 
-    rate = rospy.Rate(50)
+    rate = rospy.Rate(20)
     while not rospy.is_shutdown():
         key.resolve_key_input()
         driver.send_updated_twist()

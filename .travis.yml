@@ -10,12 +10,14 @@ notifications:
   email:
     on_failure: always
     recipients:
-      #- j.schleicher@pilz.de
+      - j.schleicher@pilz.de
 
 env:
   global:
     - ROS_DISTRO=melodic
     - DOCKER_IMAGE=moveit/moveit:master-source
+  matrix:
+    - TEST_BLACKLIST=  # list packages, for which to skip the unittests
     - TEST=catkin_lint
 
 before_script:

@@ -29,7 +29,7 @@ To test jogging, execute the following steps:
 
 1. Startup the prbt: 
 ```
-roslaunch pilz_jog_arm_support prbt_jog_arm_sim.launch
+roslaunch prbt_jog_arm_support prbt_jog_arm_sim.launch
 ```
 
 2. Send test command:

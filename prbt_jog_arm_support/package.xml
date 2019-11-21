@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>pilz_jog_arm_support</name>
+  <name>prbt_jog_arm_support</name>
   <version>0.0.1</version>
   <description>pilz teach joint control</description>
 

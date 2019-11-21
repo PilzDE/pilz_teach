@@ -1,6 +1,6 @@
 <launch>
   <node name="jog_server" pkg="moveit_jog_arm" type="jog_server" output="screen" >
     <param name="parameter_ns" type="string" value="jog_server" />
-    <rosparam command="load" file="$(find pilz_jog_arm_support)/config/prbt_jog_settings.yaml" />
+    <rosparam command="load" file="$(find prbt_jog_arm_support)/config/prbt_jog_settings.yaml" />
   </node>
 </launch>

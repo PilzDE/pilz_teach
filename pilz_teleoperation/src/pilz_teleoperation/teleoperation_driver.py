@@ -1,9 +1,38 @@
 import rospy
 import pilz_teleoperation.teleoperation_settings as _teleop_settings
 
-from copy import deepcopy
-from geometry_msgs.msg import Twist, TwistStamped
+from geometry_msgs.msg import Twist, TwistStamped, Vector3
 from pilz_teleoperation.srv import SetTeleopSettings, SetTeleopSettingsResponse, SetTeleopSettingsRequest
+
+
+class _TeleoperationTwist(object):
+    """ Extension of Twist class to store the required math. """
+    def __init__(self, twist=None, *args, **kwargs):
+        super(_TeleoperationTwist, self).__init__(*args, **kwargs)
+        self.linear = Vector3(twist.linear.x,
+                              twist.linear.y,
+                              twist.linear.z)
+        self.angular = Vector3(twist.angular.x,
+                               twist.angular.y,
+                               twist.angular.z)
+
+    def project_on_plane(self, projection_plane):
+        if projection_plane == SetTeleopSettingsRequest.USE_XZ_PLANE:
+            self.linear.y, self.linear.z = 0, self.linear.y
+        elif projection_plane == SetTeleopSettingsRequest.USE_YZ_PLANE:
+            self.linear.x, self.linear.y, self.linear.z = 0, self.linear.x, self.linear.y
+
+    def norm(self):
+        t_sum = abs(self.linear.x) + abs(self.linear.y) + abs(self.linear.z)
+        if t_sum > 0:
+            self.linear.x /= t_sum
+            self.linear.y /= t_sum
+            self.linear.z /= t_sum
+
+    def scale_linear_velocity(self, lin_vel):
+        self.linear.x *= _teleop_settings.MAX_JOG_RANGE * lin_vel
+        self.linear.y *= _teleop_settings.MAX_JOG_RANGE * lin_vel
+        self.linear.z *= _teleop_settings.MAX_JOG_RANGE * lin_vel
 
 
 class TeleoperationDriver(object):
@@ -19,7 +48,7 @@ class TeleoperationDriver(object):
         SERVICES:
             - /set_teleop_settings: teleoperation settings like velocity scaling, target frame, ...
     """
-    KEY_INPUT_TIMEOUT = 0.1
+    KEY_INPUT_TIMEOUT = 0.05
 
     def __init__(self, window):
         """
@@ -80,32 +109,13 @@ class TeleoperationDriver(object):
     def _send_updated_twist(self):
         ts = self.__get_stamped_twist()
         if self.__key_input_is_new_enough():
-            new_twist = deepcopy(self.__last_twist_msg.twist)
-            self.__project_twist_on_plane(new_twist.linear)
-            self.__norm_twist(new_twist.linear)
-            self.__scale_linear_speed_of_twist(new_twist.linear)
+            new_twist = _TeleoperationTwist(twist=self.__last_twist_msg.twist)
+            new_twist.project_on_plane(self._settings.movement_projection_plane)
+            new_twist.norm()
+            new_twist.scale_linear_velocity(self._settings.linear_velocity)
             ts.twist = new_twist
         self._twist_publisher.publish(ts)
 
     def __key_input_is_new_enough(self):
         return rospy.Time.now() - self.__last_twist_msg.header.stamp \
                < rospy.Duration.from_sec(TeleoperationDriver.KEY_INPUT_TIMEOUT)
-
-    def __project_twist_on_plane(self, twist_lin):
-        if self._settings.movement_projection_plane == SetTeleopSettingsRequest.USE_XZ_PLANE:
-            twist_lin.y, twist_lin.z = 0, twist_lin.y
-        elif self._settings.movement_projection_plane == SetTeleopSettingsRequest.USE_YZ_PLANE:
-            twist_lin.x, twist_lin.y, twist_lin.z = 0, twist_lin.x, twist_lin.y
-
-    @staticmethod
-    def __norm_twist(twist_lin):
-        t_sum = abs(twist_lin.x) + abs(twist_lin.y) + abs(twist_lin.z)
-        if t_sum > 0:
-            twist_lin.x = twist_lin.x / t_sum
-            twist_lin.y = twist_lin.y / t_sum
-            twist_lin.z = twist_lin.z / t_sum
-
-    def __scale_linear_speed_of_twist(self, twist_lin):
-        twist_lin.x = twist_lin.x * _teleop_settings.MAX_JOG_RANGE * self._settings.linear_velocity
-        twist_lin.y = twist_lin.y * _teleop_settings.MAX_JOG_RANGE * self._settings.linear_velocity
-        twist_lin.z = twist_lin.z * _teleop_settings.MAX_JOG_RANGE * self._settings.linear_velocity

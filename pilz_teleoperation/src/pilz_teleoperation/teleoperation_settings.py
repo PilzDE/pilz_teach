@@ -41,7 +41,7 @@ def _toggle_projection_plane(settings):
     options = [SetTeleopSettingsRequest.USE_XY_PLANE,
                SetTeleopSettingsRequest.USE_XZ_PLANE,
                SetTeleopSettingsRequest.USE_YZ_PLANE]
-    settings.plane = options[(options.index(settings.plane) + 1) % len(options)]
+    settings.movement_projection_plane = options[(options.index(settings.movement_projection_plane) + 1) % len(options)]
     return True
 
 

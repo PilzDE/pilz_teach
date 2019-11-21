@@ -7,7 +7,7 @@ It can be used without additional hardware (keyboard-only-mode by default) but h
 
 
 ## Package `prbt_jog_arm_support`
-[prbt_jog_arm_support](pilz_jog_arm_support/README.md) contains launch and config files to bring up the robot together with jog_arm.
+[prbt_jog_arm_support](prbt_jog_arm_support/README.md) contains launch and config files to bring up the robot together with jog_arm.
 
 ## Related project links
 * [pilz_robots](http://wiki.ros.org/pilz_robots) package and tutorials for getting started with PRBT6 robot manipulator module

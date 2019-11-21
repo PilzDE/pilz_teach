@@ -1,0 +1,65 @@
+from pilz_teleoperation.srv import SetTeleopSettingsRequest
+
+
+WORLD_FRAME = "world"
+TCP_FRAME = "prbt_tcp"
+VELOCITY_SPEEDUP_LINEAR = 0.01
+VELOCITY_SPEEDUP_ANGULAR = 0.01
+MAX_VELOCITY_LINEAR = 1.0
+MAX_VELOCITY_ANGULAR = 1.0
+MIN_VELOCITY_LINEAR = 0.1
+MIN_VELOCITY_ANGULAR = 0.1
+
+
+def _decrease_linear_velocity(settings):
+    settings.linear_velocity = max(MIN_VELOCITY_LINEAR, settings.linear_velocity - VELOCITY_SPEEDUP_LINEAR)
+    return True
+
+
+def _increase_linear_velocity(settings):
+    settings.linear_velocity = min(MAX_VELOCITY_LINEAR, settings.linear_velocity + VELOCITY_SPEEDUP_LINEAR)
+    return True
+
+
+def _decrease_angular_velocity(settings):
+    settings.angular_velocity = max(MIN_VELOCITY_ANGULAR, settings.angular_velocity - VELOCITY_SPEEDUP_ANGULAR)
+    return True
+
+
+def _increase_angular_velocity(settings):
+    settings.angular_velocity = min(MAX_VELOCITY_ANGULAR, settings.angular_velocity + VELOCITY_SPEEDUP_ANGULAR)
+    return True
+
+
+def _toggle_target_frame_world_tcp(settings):
+    settings.frame = TCP_FRAME if settings.frame == WORLD_FRAME else WORLD_FRAME
+    return True
+
+
+def _toggle_projection_plane(settings):
+    options = [SetTeleopSettingsRequest.USE_XY_PLANE,
+               SetTeleopSettingsRequest.USE_XZ_PLANE,
+               SetTeleopSettingsRequest.USE_YZ_PLANE]
+    settings.plane = options[(options.index(settings.plane) + 1) % len(options)]
+    return True
+
+
+class TeleoperationSettings:
+    setting_change_method_bindings = {
+        SetTeleopSettingsRequest.DECREASE_ANGULAR_VELOCITY: _decrease_angular_velocity,
+        SetTeleopSettingsRequest.INCREASE_ANGULAR_VELOCITY: _increase_angular_velocity,
+        SetTeleopSettingsRequest.DECREASE_LINEAR_VELOCITY: _decrease_linear_velocity,
+        SetTeleopSettingsRequest.INCREASE_LINEAR_VELOCITY: _increase_linear_velocity,
+        SetTeleopSettingsRequest.TOGGLE_WORLD_AND_TCP_FRAME: _toggle_target_frame_world_tcp,
+        SetTeleopSettingsRequest.TOGGLE_PLANE: _toggle_projection_plane
+    }
+
+    def __init__(self):
+        self.angular_velocity = 0.5
+        self.linear_velocity = 0.5
+        self.frame = WORLD_FRAME
+        self.plane = SetTeleopSettingsRequest.USE_XY_PLANE
+
+    def get_current_plane_string(self):
+        return "XY" if self.plane == SetTeleopSettingsRequest.USE_XY_PLANE \
+                    else ("XZ" if self.plane == SetTeleopSettingsRequest.USE_XZ_PLANE else "YZ")

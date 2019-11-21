@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>pilz_6D_key_teleop</name>
+  <name>pilz_teleoperation</name>
   <version>0.1.0</version>
   <description>keyboard teleoperation package</description>
 
@@ -15,5 +15,10 @@
   <url type="repository">https://github.com/PilzDE/pilz_teach</url>
 
   <buildtool_depend>catkin</buildtool_depend>
+  <build_depend>message_generation</build_depend>
+  <build_depend>std_msgs</build_depend>
+  <build_depend>rospy</build_depend>
+  <exec_depend>message_runtime</exec_depend>
+  <exec_depend>geometry_msgs</exec_depend>
   <exec_depend>rospy</exec_depend>
 </package>

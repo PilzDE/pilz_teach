@@ -45,9 +45,9 @@ class _TeleoperationTwist(object):
             self.linear.z /= t_sum
 
     def scale_linear_velocity(self, lin_vel):
-        self.linear.x *= _teleop_settings.MAX_JOG_RANGE * lin_vel
-        self.linear.y *= _teleop_settings.MAX_JOG_RANGE * lin_vel
-        self.linear.z *= _teleop_settings.MAX_JOG_RANGE * lin_vel
+        self.linear.x *= lin_vel
+        self.linear.y *= lin_vel
+        self.linear.z *= lin_vel
 
 
 class TeleoperationDriver(object):

@@ -81,3 +81,4 @@ class CursesKeyInput(object):
             self._twist_pub.publish(Twist(linear=CursesKeyInput.MOVE_BINDINGS[key_code]))
         elif key_code in CursesKeyInput.SETTING_BINDINGS:
             self._setting_srv(SetTeleopSettingsRequest(pressed_commands=[CursesKeyInput.SETTING_BINDINGS[key_code]]))
+

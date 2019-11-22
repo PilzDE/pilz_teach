@@ -15,6 +15,7 @@
 
 from pilz_teleoperation.srv import SetTeleopSettingsRequest
 
+""" Settings for teleoperation driver to configure e.g. the jogging-plane and velocity """
 
 WORLD_FRAME = "world"
 TCP_FRAME = "prbt_tcp"
@@ -24,7 +25,8 @@ MAX_VELOCITY_LINEAR = 1.0
 MAX_VELOCITY_ANGULAR = 1.0
 MIN_VELOCITY_LINEAR = 0.1
 MIN_VELOCITY_ANGULAR = 0.1
-MAX_JOG_RANGE = 0.2
+DEFAULT_VELOCITY_LINEAR = 0.2
+DEFAULT_VELOCITY_ANGULAR = 0.2
 
 
 def _decrease_linear_velocity(settings):
@@ -71,8 +73,8 @@ class TeleoperationSettings:
     }
 
     def __init__(self):
-        self.angular_velocity = 0.5
-        self.linear_velocity = 0.5
+        self.angular_velocity = DEFAULT_VELOCITY_ANGULAR
+        self.linear_velocity = DEFAULT_VELOCITY_LINEAR
         self.frame = WORLD_FRAME
         self.movement_projection_plane = SetTeleopSettingsRequest.USE_XY_PLANE
 

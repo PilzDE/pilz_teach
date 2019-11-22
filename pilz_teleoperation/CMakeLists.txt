@@ -16,5 +16,7 @@ catkin_python_setup()
 generate_messages()
 catkin_package(CATKIN_DEPENDS message_runtime)
 
-catkin_install_python(PROGRAMS scripts/key_teleop.py
+catkin_install_python(PROGRAMS 
+    scripts/key_teleop.py
+    scripts/pilz_teleop_driver.py
 	DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})

@@ -16,6 +16,7 @@ env:
   global:
     - ROS_DISTRO=melodic
     - DOCKER_IMAGE=moveit/moveit:master-source
+    - WARNINGS_OK=false
   matrix:
     - TEST_BLACKLIST=  # list packages, for which to skip the unittests
     - TEST=catkin_lint

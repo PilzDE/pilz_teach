@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>pilz_teleoperation</name>
+  <version>0.1.0</version>
+  <description>Teleoperation (jogging) for a manipulator e.g. using a keyboard interface</description>
+
+  <maintainer email="j.schleicher@pilz.de">Joachim Schleicher</maintainer>
+  <maintainer email="p.cheray@pilz.de">Philippe Cheray</maintainer>
+  <maintainer email="r.feistenauer@pilz.de">Richard Feistenauer</maintainer>
+  <maintainer email="t.vetter@pilz.de">Tobias Vetter</maintainer>
+
+  <license>LGPLv3</license>
+
+  <url type="bugtracker">https://github.com/PilzDE/pilz_teach/issues</url>
+  <url type="repository">https://github.com/PilzDE/pilz_teach</url>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <build_depend>message_generation</build_depend>
+  <build_depend>std_msgs</build_depend>
+  <build_depend>rospy</build_depend>
+  <exec_depend>message_runtime</exec_depend>
+  <exec_depend>geometry_msgs</exec_depend>
+  <exec_depend>rospy</exec_depend>
+</package>

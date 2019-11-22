@@ -9,6 +9,9 @@ It can be used without additional hardware (keyboard-only-mode by default) but h
 ## Package `prbt_jog_arm_support`
 [prbt_jog_arm_support](prbt_jog_arm_support/README.md) contains launch and config files to bring up the robot together with jog_arm.
 
+## Package `pilz_teleoperation`
+[pilz_teleoperation](pilz_teleoperation/README.md) contains a python driver and frondend to jog the robot interactively.
+
 ## Related project links
 * [pilz_robots](http://wiki.ros.org/pilz_robots) package and tutorials for getting started with PRBT6 robot manipulator module
 * [jog_arm, currently in moveit_experimental](https://github.com/ros-planning/moveit) used for jogging the manipulator

@@ -2,7 +2,7 @@
 <package format="2">
   <name>pilz_teleoperation</name>
   <version>0.1.0</version>
-  <description>keyboard teleoperation package</description>
+  <description>Teleoperation (jogging) for a manipulator e.g. using a keyboard interface</description>
 
   <maintainer email="j.schleicher@pilz.de">Joachim Schleicher</maintainer>
   <maintainer email="p.cheray@pilz.de">Philippe Cheray</maintainer>

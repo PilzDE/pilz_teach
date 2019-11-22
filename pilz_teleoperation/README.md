@@ -1,6 +1,5 @@
 # Teleoperation
-
-This Package contains a keyboard interface to move the manipulator around.
+Teleoperation (jogging) for a manipulator e.g. using a keyboard interface.
 
 ## Getting Started
 Bring up your robot and jog-arm-server; see for example [prbt_jog_arm package](../prbt_jog_arm_support/README.md).

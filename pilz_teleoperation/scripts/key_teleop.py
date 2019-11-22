@@ -21,7 +21,9 @@ import pilz_teleoperation
 
 
 def main(stdscr):
-    rospy.init_node('key_teleop')
+    """ Callback for curses
+    :param stdscr: terminal screen
+    """
     key = pilz_teleoperation.CursesKeyInput(stdscr)
     win = pilz_teleoperation.TerminalTextWindow(stdscr)
     driver = pilz_teleoperation.TeleoperationDriver(win)
@@ -34,6 +36,7 @@ def main(stdscr):
 
 
 if __name__ == '__main__':
+    rospy.init_node('key_teleop')
     try:
         curses.wrapper(main)
     except rospy.ROSInterruptException:

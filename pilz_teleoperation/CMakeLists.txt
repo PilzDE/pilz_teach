@@ -7,7 +7,6 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
 )
 
-
 add_service_files(
   FILES
   SetTeleopSettings.srv
@@ -19,7 +18,3 @@ catkin_package(CATKIN_DEPENDS message_runtime)
 
 catkin_install_python(PROGRAMS scripts/key_teleop.py
 	DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
-
-include_directories(
-    ${catkin_INCLUDE_DIRS}
-)

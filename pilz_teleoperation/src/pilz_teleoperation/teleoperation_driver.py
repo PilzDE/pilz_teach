@@ -14,6 +14,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import rospy
+import math
 import pilz_teleoperation.teleoperation_settings as _teleop_settings
 
 from geometry_msgs.msg import Twist, TwistStamped, Vector3
@@ -37,12 +38,10 @@ class _TeleoperationTwist(object):
         elif projection_plane == SetTeleopSettingsRequest.USE_YZ_PLANE:
             self.linear.x, self.linear.y, self.linear.z = 0, self.linear.x, self.linear.y
 
-    def norm(self):
-        t_sum = abs(self.linear.x) + abs(self.linear.y) + abs(self.linear.z)
-        if t_sum > 0:
-            self.linear.x /= t_sum
-            self.linear.y /= t_sum
-            self.linear.z /= t_sum
+    def normalize(self):
+        norm = math.sqrt((self.linear.x)**2 + (self.linear.y)**2 + (self.linear.z)**2)
+        if norm > 0:
+            self.scale_linear_velocity(1/norm)
 
     def scale_linear_velocity(self, lin_vel):
         self.linear.x *= lin_vel
@@ -126,7 +125,7 @@ class TeleoperationDriver(object):
         if self.__key_input_is_new_enough():
             new_twist = _TeleoperationTwist(twist=self.__last_twist_msg.twist)
             new_twist.project_on_plane(self._settings.movement_projection_plane)
-            new_twist.norm()
+            new_twist.normalize()
             new_twist.scale_linear_velocity(self._settings.linear_velocity)
             ts.twist = new_twist
         self._twist_publisher.publish(ts)

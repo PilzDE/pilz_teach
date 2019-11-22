@@ -41,7 +41,7 @@ class CursesKeyInput(object):
         ord('-'): SetTeleopSettingsRequest.DECREASE_LINEAR_VELOCITY,
         ord('*'): SetTeleopSettingsRequest.TOGGLE_PLANE,
         ord('/'): SetTeleopSettingsRequest.TOGGLE_WORLD_AND_TCP_FRAME,
-        ord(','): SetTeleopSettingsRequest.TOGGLE_CONTROLLER
+        ord(','): SetTeleopSettingsRequest.TOGGLE_CONTROLLER  # not yet implemented
     }
 
     BINDING_TEXT = "   - Keybard Configuration:\n" \
@@ -49,8 +49,7 @@ class CursesKeyInput(object):
                    "     + = increase velocity\n" \
                    "     - = decrease velocity\n" \
                    "     * = Toggle Plane to move on\n" \
-                   "     / = Toggle between 'world' and 'tcp' frame\n" \
-                   "     , = Toggle between controllers"
+                   "     / = Toggle between 'world' and 'tcp' frame"
 
     def __init__(self, stdscr):
         super(CursesKeyInput, self).__init__()

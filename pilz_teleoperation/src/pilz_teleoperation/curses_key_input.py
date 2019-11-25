@@ -66,6 +66,9 @@ class CursesKeyInput(TeleoperationInput):
 
     def _read_keyboard_input(self):
         key_code = self._screen.getch()
+        while self._screen.getch() != -1:
+            pass
+
         if key_code in CursesKeyInput.MOVE_BINDINGS:
             self._twist_pub.publish(CursesKeyInput.MOVE_BINDINGS[key_code])
         elif key_code in CursesKeyInput.SETTING_BINDINGS:

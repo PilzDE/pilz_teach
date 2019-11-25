@@ -1,13 +1,11 @@
-# pilz_teach
+## Disclaimer
+
+Since the ros1_bridge doesn't provide bridging custom topics by now, when installed via binaries, we decided to stop developing this package for ROS2 and wait for a distribution, which supports straightforward bridging of custom messages.# pilz_teach
 
 pilz_teach is a PRBT6 teaching software module:
 *Jogging* the manipulator and *defining* poses as you are used to in robotics controllers, but using native ROS functionality.
 
 It can be used without additional hardware (keyboard-only-mode by default) but has easy interfaces to connect to any external device.
-
-## Disclaimer
-
-Since the ros1_bridge doesn't provide bridging custom topics by now, when installed via binaries, we decided to stop developing this package for ROS2 and wait for a distribution, which supports straightforward bridging of custom messages.
 
 ## Instructions
 

@@ -27,14 +27,21 @@ class CursesKeyInput(object):
         Additional Settings like target frame or velocity scaling are published separately.
     """
     MOVE_BINDINGS = {
-        ord('7'): Vector3(-1, 1, 0),
-        ord('8'): Vector3(0, 1, 0),
-        ord('9'): Vector3(1, 1, 0),
-        ord('6'): Vector3(1, 0, 0),
-        ord('3'): Vector3(1, -1, 0),
-        ord('2'): Vector3(0, -1, 0),
-        ord('1'): Vector3(-1, -1, 0),
-        ord('4'): Vector3(-1, 0, 0)
+        ord('7'): Twist(linear=Vector3(-1, 1, 0)),
+        ord('8'): Twist(linear=Vector3(0, 1, 0)),
+        ord('9'): Twist(linear=Vector3(1, 1, 0)),
+        ord('6'): Twist(linear=Vector3(1, 0, 0)),
+        ord('3'): Twist(linear=Vector3(1, -1, 0)),
+        ord('2'): Twist(linear=Vector3(0, -1, 0)),
+        ord('1'): Twist(linear=Vector3(-1, -1, 0)),
+        ord('4'): Twist(linear=Vector3(-1, 0, 0)),
+        
+        ord('u'): Twist(angular=Vector3(-1, 0, 0)),
+        ord('i'): Twist(angular=Vector3(0, -1, 0)),
+        ord('o'): Twist(angular=Vector3(0, 0, -1)),
+        ord('j'): Twist(angular=Vector3(1, 0, 0)),
+        ord('k'): Twist(angular=Vector3(0, 1, 0)),
+        ord('l'): Twist(angular=Vector3(0, 0, 1)),
     }
     SETTING_BINDINGS = {
         ord('+'): SetTeleopSettingsRequest.INCREASE_LINEAR_VELOCITY,
@@ -77,7 +84,7 @@ class CursesKeyInput(object):
         """
         key_code = self._screen.getch()
         if key_code in CursesKeyInput.MOVE_BINDINGS:
-            self._twist_pub.publish(Twist(linear=CursesKeyInput.MOVE_BINDINGS[key_code]))
+            self._twist_pub.publish(CursesKeyInput.MOVE_BINDINGS[key_code])
         elif key_code in CursesKeyInput.SETTING_BINDINGS:
             self._setting_srv(SetTeleopSettingsRequest(pressed_commands=[CursesKeyInput.SETTING_BINDINGS[key_code]]))
 

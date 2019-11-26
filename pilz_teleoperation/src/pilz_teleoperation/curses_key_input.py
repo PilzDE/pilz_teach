@@ -48,29 +48,46 @@ class CursesKeyInput(TeleoperationInput):
         ord(','): SetTeleopSettingsRequest.TOGGLE_CONTROLLER  # not yet implemented
     }
 
-    def __init__(self, stdscr, *args, **kwargs):
-        super(CursesKeyInput, self).__init__(*args, **kwargs)
-        self.__init_curses(stdscr)
+    BINDING_TEXT = "   - Keybard Configuration:\n" \
+                   "     Use numpad numbers to move!\n" \
+                   "     + = increase velocity\n" \
+                   "     - = decrease velocity\n" \
+                   "     * = Toggle Plane to move on\n" \
+                   "     / = Toggle between 'world' and 'tcp' frame"
 
-    @staticmethod
-    def _get_key_symbol(k):
-        try:
-            return ord(k)
-        except TypeError:
-            return getattr(curses, k)
+    def __init__(self, stdscr, driver):
+        super(CursesKeyInput, self).__init__()
+        self.__driver = driver
+        self.__init_curses(stdscr)
+        self.__publish_bindings_to_driver_window()
 
     def __init_curses(self, stdscr):
         curses.cbreak()
         self._screen = stdscr
         self._screen.nodelay(True)
 
-    def _read_keyboard_input(self):
-        key_code = self._screen.getch()
-        while self._screen.getch() != -1:
-            pass
+    def __publish_bindings_to_driver_window(self):
+        win_conf_pub = rospy.Publisher("teleop_input_config_msg", String, queue_size=1, latch=True)
+        win_conf_pub.publish(self.BINDING_TEXT)
+
+    def resolve_key_input(self):
+        """ Read currently pressed key and publish it to the driver.
+            Should be called with at least 10 HZ!
+        """
+        key_code = self._read_keyboard_input()
 
         if key_code in CursesKeyInput.MOVE_BINDINGS:
-            self._twist_pub.publish(CursesKeyInput.MOVE_BINDINGS[key_code])
+            self.__driver.set_twist_command(CursesKeyInput.MOVE_BINDINGS[key_code])
         elif key_code in CursesKeyInput.SETTING_BINDINGS:
-            self._setting_srv(SetTeleopSettingsRequest(pressed_commands=[CursesKeyInput.SETTING_BINDINGS[key_code]]))
+            new_settings = SetTeleopSettingsRequest(pressed_commands=[CursesKeyInput.SETTING_BINDINGS[key_code]])
+            self.__driver.set_teleop_settings(new_settings)
+
+    def _read_keyboard_input(self):
+        key_code = self._screen.getch()
+        self._clear_input_queue()
+        return key_code
+
+    def _clear_input_queue(self):
+        while self._screen.getch() != -1:
+            pass
 

@@ -27,7 +27,7 @@ def main(stdscr):
 
     win = pilz_teleoperation.TerminalTextWindow(stdscr)
     driver = pilz_teleoperation.TeleoperationDriver(win)
-    key = pilz_teleoperation.CursesKeyInput(stdscr, driver=driver)
+    key = pilz_teleoperation.CursesKeyInput(stdscr, driver)
 
     rate = rospy.Rate(20)
     while not rospy.is_shutdown():

@@ -89,4 +89,3 @@ class CursesKeyInput(object):
         key_code = self._screen.getch()
         curses.flushinp()
         return key_code
-

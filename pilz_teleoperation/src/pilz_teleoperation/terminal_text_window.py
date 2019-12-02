@@ -81,7 +81,7 @@ class TerminalTextWindow(TeleoperationWindow):
         self._start_page()
         self._write_line(1, "PILZ teleoperation driver")
         self._write_line(3, "Settings:")
-        self._write_line(4, "  - linear velocity: %.2f m/s \t\t angular velocity: %.2f rad/s"
+        self._write_line(4, "  - linear velocity: %.2f m/s \t angular velocity: %.2f rad/s"
                          % (self._infos["lin_vel"], self._infos["ang_vel"]))
         self._write_line(5, "  - target frame:    %s moves on plane:   %s"
                          % (self._infos["target_frame"].ljust(17), self._infos["plane"]))

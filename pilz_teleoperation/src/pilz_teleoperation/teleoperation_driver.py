@@ -18,6 +18,7 @@ import math
 import pilz_teleoperation.teleoperation_settings as _teleop_settings
 
 from geometry_msgs.msg import Twist, TwistStamped, Vector3
+from control_msgs.msg import JointJog
 from pilz_teleoperation.srv import SetTeleopSettings, SetTeleopSettingsResponse, SetTeleopSettingsRequest
 
 
@@ -49,6 +50,23 @@ class _TeleoperationTwist(object):
         self.linear.z *= lin_vel
 
 
+class _TeleoperationJointJog(object):
+    """ Extension of JointJog class to store required math. """
+    def __init__(self, joint_jog, *args, **kwargs):
+        super(_TeleoperationJointJog, self).__init__(*args, **kwargs)
+        self.joint_names = joint_jog.joint_names
+        self.displacements = joint_jog.displacements
+        self.velocities = joint_jog.velocities
+
+    def scale_linear_velocity(self, lin_vel):
+        self.velocities = [v * lin_vel for v in self.velocities]
+        self.displacements = [d * lin_vel for d in self.displacements]
+
+    def choose_joint_to_jog(self, current_joint):
+        if len(self.joint_names) == 0:
+            self.joint_names = [current_joint]
+
+
 class TeleoperationDriver(object):
     """ Main class of the teleoperation driver.
 
@@ -73,6 +91,7 @@ class TeleoperationDriver(object):
         self._output_window = window
         self._settings = _teleop_settings.TeleoperationSettings()
         self.__last_twist_msg = TwistStamped()
+        self.__last_jog_msg = JointJog()
         self.__ros_init()
         self._update_settings_display()
 
@@ -80,7 +99,9 @@ class TeleoperationDriver(object):
         self._hz = rospy.Rate(20)
         self._sv_settings = rospy.Service("/teleoperation/set_settings", SetTeleopSettings, self.set_teleop_settings)
         self._sub_twist = rospy.Subscriber("/teleoperation/twist", Twist, self.set_twist_command, queue_size=1)
+        self._sub_twist = rospy.Subscriber("/teleoperation/joint_jog", JointJog, self.set_twist_command, queue_size=1)
         self._twist_publisher = rospy.Publisher("/jog_server/delta_jog_cmds", TwistStamped, queue_size=1)
+        self._jog_publisher = rospy.Publisher("/jog_server/joint_delta_jog_cmds", JointJog, queue_size=1)
 
     def set_teleop_settings(self, req):
         for command in req.pressed_commands:
@@ -104,6 +125,10 @@ class TeleoperationDriver(object):
     def set_twist_command(self, twist_):
         self.__last_twist_msg = self.__get_stamped_twist(twist_)
 
+    def set_joint_jog_command(self, joint_jog_):
+        joint_jog_.header.stamp = rospy.Time.now()
+        self.__last_jog_msg = joint_jog_
+
     def __get_stamped_twist(self, twist_=None):
         st = TwistStamped(twist=twist_)
         st.header.frame_id = self._settings.frame
@@ -119,11 +144,14 @@ class TeleoperationDriver(object):
         """ Publishes the current twist to the jog arm driver.
             Has to be called at least with 10 HZ!
         """
-        self._send_updated_twist()
+        if self.__last_twist_msg.header.stamp > self.__last_jog_msg.header.stamp:
+            self._send_updated_twist()
+        else:
+            self._send_updated_jog()
 
     def _send_updated_twist(self):
         ts = self.__get_stamped_twist()
-        if self.__key_input_is_new_enough():
+        if self.__key_input_is_new_enough(self.__last_twist_msg):
             new_twist = _TeleoperationTwist(twist=self.__last_twist_msg.twist)
             new_twist.project_on_plane(self._settings.movement_projection_plane)
             new_twist.normalize()
@@ -131,6 +159,23 @@ class TeleoperationDriver(object):
             ts.twist = new_twist
         self._twist_publisher.publish(ts)
 
-    def __key_input_is_new_enough(self):
-        return rospy.Time.now() - self.__last_twist_msg.header.stamp \
+    def _send_updated_jog(self):
+        js = JointJog()
+        if self.__key_input_is_new_enough(self.__last_jog_msg):
+            new_jog = _TeleoperationJointJog(joint_jog=self.__last_jog_msg)
+            new_jog.choose_joint_to_jog(self._settings.joint)
+            new_jog.scale_linear_velocity(self._settings.linear_velocity)
+            js.joint_names = new_jog.joint_names
+            js.velocities = new_jog.velocities
+            js.displacements = new_jog.displacements
+            js.header.stamp = rospy.Time.now()
+        else:
+            js.joint_names = _teleop_settings.JOINTS
+            js.velocities = [0] * len(_teleop_settings.JOINTS)
+            js.displacements = [0] * len(_teleop_settings.JOINTS)
+        self._jog_publisher.publish(js)
+
+    @staticmethod
+    def __key_input_is_new_enough(msg):
+        return rospy.Time.now() - msg.header.stamp \
                < rospy.Duration.from_sec(TeleoperationDriver.KEY_INPUT_TIMEOUT)

@@ -4,7 +4,6 @@ project(pilz_teleoperation)
 find_package(catkin REQUIRED COMPONENTS
   message_generation
   rospy
-  rospy_message_convertion
   std_msgs
 )
 

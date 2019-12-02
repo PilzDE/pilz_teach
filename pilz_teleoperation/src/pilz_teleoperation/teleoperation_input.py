@@ -19,6 +19,7 @@ import yaml
 
 import rospy
 from geometry_msgs.msg import Twist
+from control_msgs.msg import JointJog
 from pilz_teleoperation.srv import SetTeleopSettings, SetTeleopSettingsRequest
 from rospy_message_converter import message_converter
 from std_msgs.msg import String
@@ -28,20 +29,21 @@ class TeleoperationInput(object):
     """ Base Class for input devices """
 
     MOVE_BINDINGS = {}
+    JOINT_BINDINGS = {}
     SETTING_BINDINGS = {}
     INPUT_DESCRIPTION = ""
 
     def __init__(self, driver=None, *args, **kwargs):
         super(TeleoperationInput, self).__init__(*args, **kwargs)
         self.__driver = driver
-        if self.__driver is None:
-            self.__init_driver_connection()
+        self.__init_driver_connection()
         key_config_path = rospy.get_param("~bindings", self.__get_default_config_path())
         self._try_to_load_config(key_config_path)
         self._publish_bindings_to_driver_window()
 
     def __init_driver_connection(self):
         self.__twist_publisher = rospy.Publisher("/teleoperation/twist", Twist, queue_size=1)
+        self.__joint_publisher = rospy.Publisher("/teleoperation/joint_jog", JointJog, queue_size=1)
         self.__setting_service = rospy.ServiceProxy("/teleoperation/set_settings", SetTeleopSettings)
 
     @staticmethod
@@ -55,6 +57,9 @@ class TeleoperationInput(object):
                 for k, v in bindings["MovementBindings"].items():
                     self.MOVE_BINDINGS[self._get_key_symbol(k)] = \
                         message_converter.convert_dictionary_to_ros_message('geometry_msgs/Twist', v)
+                for k, v in bindings["JointJogBindings"].items():
+                    self.JOINT_BINDINGS[self._get_key_symbol(k)] = \
+                        message_converter.convert_dictionary_to_ros_message('control_msgs/JointJog', v)
                 for k, v in bindings["SettingBindings"].items():
                     self.SETTING_BINDINGS[self._get_key_symbol(k)] = \
                         getattr(SetTeleopSettingsRequest, v)
@@ -78,20 +83,25 @@ class TeleoperationInput(object):
         key_code = self._read_keyboard_input()
         if key_code in self.MOVE_BINDINGS:
             self.__publish_twist_command(self.MOVE_BINDINGS[key_code])
+        elif key_code in self.JOINT_BINDINGS:
+            self.__publish_joint_jog_command(self.JOINT_BINDINGS[key_code])
         elif key_code in self.SETTING_BINDINGS:
             self.__change_settings(SetTeleopSettingsRequest(pressed_commands=[self.SETTING_BINDINGS[key_code]]))
 
     def __publish_twist_command(self, command):
-        if self.__driver is not None:
-            self.__driver.set_twist_command(command)
-        else:
-            self.__twist_publisher.publish(command)
+        self.send_command("set_twist_command", self.__twist_publisher.publish, command)
+
+    def __publish_joint_jog_command(self, command):
+        self.send_command("set_joint_jog_command", self.__joint_publisher.publish, command)
 
     def __change_settings(self, command):
+        self.send_command("set_teleop_settings", self.__setting_service, command)
+
+    def send_command(self, direct, fallback, command):
         if self.__driver is not None:
-            self.__driver.set_teleop_settings(command)
+            getattr(self.__driver, direct)(command)
         else:
-            self.__setting_service(command)
+            fallback(command)
 
     @abc.abstractmethod
     def _read_keyboard_input(self):

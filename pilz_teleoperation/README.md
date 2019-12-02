@@ -20,14 +20,18 @@ Use following Syntax:
     ```
     MovementBindings:
       'w': <Twist> (e.g. {"linear": {"x": 1.0}})
+      '<CURSES_KEY_NAME>': <Twist> (e.g. KEY_LEFT)
     SettingBindings:
-      '+': <SettingName> (e.g. INCREASE_LINEAR_VELOCITY)
+      '+': <SettingName> (e.g. USE_XZ_PLANE)
     Description: |-
       Displayed Text e.g. to show current bindings
       With the '|-' the text can contain multiple rows
     ```
     
-    See [SetTeleopSettings.srv](./srv/SetTeleopSettings.srv) for available settings
+    See [SetTeleopSettings.srv](./srv/SetTeleopSettings.srv) for available settings.
+    
+    See [Curses key names](https://www.gnu.org/software/guile-ncurses/manual/html_node/Getting-characters-from-the-keyboard.html)
+    for name of special characters in curses.
 
 - then start the node with the additional argument "_bindings"
 

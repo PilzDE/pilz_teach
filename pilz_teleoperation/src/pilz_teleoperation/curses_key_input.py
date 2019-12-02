@@ -14,8 +14,14 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import curses
+import rospy
+import yaml
+import rospkg
 
-from pilz_teleoperation import TeleoperationInput
+from std_msgs.msg import String
+from geometry_msgs.msg import Twist, Vector3
+from rospy_message_converter import message_converter
+from pilz_teleoperation.srv import SetTeleopSettingsRequest, SetTeleopSettings
 
 
 class CursesKeyInput(TeleoperationInput):
@@ -23,40 +29,14 @@ class CursesKeyInput(TeleoperationInput):
         The move commands are published on a 2D plane that can be toggled between XY, XZ and YZ
         Additional Settings like target frame or velocity scaling are published separately.
     """
-    MOVE_BINDINGS = {
-        ord('7'): Twist(linear=Vector3(-1, 1, 0)),
-        ord('8'): Twist(linear=Vector3(0, 1, 0)),
-        ord('9'): Twist(linear=Vector3(1, 1, 0)),
-        ord('6'): Twist(linear=Vector3(1, 0, 0)),
-        ord('3'): Twist(linear=Vector3(1, -1, 0)),
-        ord('2'): Twist(linear=Vector3(0, -1, 0)),
-        ord('1'): Twist(linear=Vector3(-1, -1, 0)),
-        ord('4'): Twist(linear=Vector3(-1, 0, 0)),
-        
-        ord('u'): Twist(angular=Vector3(-1, 0, 0)),
-        ord('i'): Twist(angular=Vector3(0, -1, 0)),
-        ord('o'): Twist(angular=Vector3(0, 0, -1)),
-        ord('j'): Twist(angular=Vector3(1, 0, 0)),
-        ord('k'): Twist(angular=Vector3(0, 1, 0)),
-        ord('l'): Twist(angular=Vector3(0, 0, 1)),
-    }
-    SETTING_BINDINGS = {
-        ord('+'): SetTeleopSettingsRequest.INCREASE_LINEAR_VELOCITY,
-        ord('-'): SetTeleopSettingsRequest.DECREASE_LINEAR_VELOCITY,
-        ord('*'): SetTeleopSettingsRequest.TOGGLE_PLANE,
-        ord('/'): SetTeleopSettingsRequest.TOGGLE_WORLD_AND_TCP_FRAME,
-        ord(','): SetTeleopSettingsRequest.TOGGLE_CONTROLLER  # not yet implemented
-    }
-
-    BINDING_TEXT = "   - Keybard Configuration:\n" \
-                   "     Use numpad numbers to move!\n" \
-                   "     + = increase velocity\n" \
-                   "     - = decrease velocity\n" \
-                   "     * = Toggle Plane to move on\n" \
-                   "     / = Toggle between 'world' and 'tcp' frame"
 
     def __init__(self, stdscr, driver):
         super(CursesKeyInput, self).__init__()
+        with open(rospkg.RosPack().get_path("pilz_teleoperation") + "/config/keyboard_binding.yaml", "r") as file_:
+            self.bindings = yaml.safe_load(file_.read())
+            for k, v in self.bindings["MovementBindings"].items():
+                self.bindings["MovementBindings"][k] = \
+                    message_converter.convert_dictionary_to_ros_message('geometry_msgs/Twist', v)
         self.__driver = driver
         self.__init_curses(stdscr)
         self.__publish_bindings_to_driver_window()
@@ -68,18 +48,17 @@ class CursesKeyInput(TeleoperationInput):
 
     def __publish_bindings_to_driver_window(self):
         win_conf_pub = rospy.Publisher("teleop_input_config_msg", String, queue_size=1, latch=True)
-        win_conf_pub.publish(self.BINDING_TEXT)
+        win_conf_pub.publish(self.bindings["Description"])
 
     def resolve_key_input(self):
         """ Read currently pressed key and publish it to the driver.
             Should be called with at least 10 HZ!
         """
         key_code = self._read_keyboard_input()
-
-        if key_code in CursesKeyInput.MOVE_BINDINGS:
-            self.__driver.set_twist_command(CursesKeyInput.MOVE_BINDINGS[key_code])
-        elif key_code in CursesKeyInput.SETTING_BINDINGS:
-            new_settings = SetTeleopSettingsRequest(pressed_commands=[CursesKeyInput.SETTING_BINDINGS[key_code]])
+        if key_code in self.bindings["MovementBindings"]:
+            self.__driver.set_twist_command(self.bindings["MovementBindings"][key_code])
+        elif key_code in self.bindings["SettingBindings"]:
+            new_settings = SetTeleopSettingsRequest(pressed_commands=[self.bindings["SettingBindings"][key_code]])
             self.__driver.set_teleop_settings(new_settings)
 
     def _read_keyboard_input(self):

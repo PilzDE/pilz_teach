@@ -87,10 +87,6 @@ class CursesKeyInput(object):
 
     def _read_keyboard_input(self):
         key_code = self._screen.getch()
-        self._clear_input_queue()
+        curses.flushinp()
         return key_code
-
-    def _clear_input_queue(self):
-        while self._screen.getch() != -1:
-            pass
 

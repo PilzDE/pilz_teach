@@ -77,8 +77,3 @@ class TeleoperationSettings:
         self.linear_velocity = DEFAULT_VELOCITY_LINEAR
         self.frame = WORLD_FRAME
         self.movement_projection_plane = SetTeleopSettingsRequest.USE_XY_PLANE
-
-    def get_current_plane_string(self):
-        """ returns a string representation of the current plane, the movement takes place on """
-        return "XY" if self.movement_projection_plane == SetTeleopSettingsRequest.USE_XY_PLANE \
-                    else ("XZ" if self.movement_projection_plane == SetTeleopSettingsRequest.USE_XZ_PLANE else "YZ")

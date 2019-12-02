@@ -1,0 +1,27 @@
+MovementBindings:
+  '7': {linear: {x: -1, y: 1}}
+  '8': {linear: {y: 1}}
+  '9': {linear: {x: 1, y: 1}}
+  '6': {linear: {x: 1}}
+  '3': {linear: {x: 1, y: -1}}
+  '2': {linear: {y: -1}}
+  '1': {linear: {x: -1, y: -1}}
+  '4': {linear: {x: -1}}
+  'u': {angular: {x: -1}}
+  'i': {angular: {y: -1}}
+  'o': {angular: {z: -1}}
+  'j': {angular: {x: 1}}
+  'k': {angular: {y: 1}}
+  'l': {angular: {z: 1}}
+SettingBindings:
+  '+': "INCREASE_LINEAR_VELOCITY"
+  '-': "DECREASE_LINEAR_VELOCITY"
+  '*': "TOGGLE_PLANE"
+  '/': "TOGGLE_WORLD_AND_TCP_FRAME"
+  ',': "TOGGLE_CONTROLLER"
+Description: |-
+        - Use numpad numbers to move!
+        - '+' = increase velocity
+        - '-' = decrease velocity
+        - '*' = Toggle Plane to move on
+        - '/' = Toggle between 'world' and 'tcp' frame

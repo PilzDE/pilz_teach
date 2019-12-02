@@ -29,7 +29,7 @@ class CursesKeyInput(TeleoperationInput):
         self.__init_curses(stdscr)
 
     @staticmethod
-    def _get_real_key(k):
+    def _get_key_symbol(k):
         try:
             return ord(k)
         except TypeError:

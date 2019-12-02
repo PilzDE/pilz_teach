@@ -14,13 +14,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import curses
-import rospy
-import yaml
-import rospkg
 
-from std_msgs.msg import String
-from rospy_message_converter import message_converter
-from pilz_teleoperation.srv import SetTeleopSettingsRequest
+from pilz_teleoperation import TeleoperationInput
 
 
 class CursesKeyInput(TeleoperationInput):

@@ -1,18 +1,3 @@
-# Copyright (c) 2019 Pilz GmbH & Co. KG
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU Lesser General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU Lesser General Public License for more details.
-#
-# You should have received a copy of the GNU Lesser General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 import abc
 import rospkg
 import yaml
@@ -55,13 +40,13 @@ class TeleoperationInput(object):
             with open(config_path, "r") as file_:
                 bindings = yaml.load(file_.read())
                 for k, v in bindings["MovementBindings"].items():
-                    self.MOVE_BINDINGS[self._get_key_symbol(k)] = \
+                    self.MOVE_BINDINGS[self._get_real_key(k)] = \
                         message_converter.convert_dictionary_to_ros_message('geometry_msgs/Twist', v)
                 for k, v in bindings["JointJogBindings"].items():
                     self.JOINT_BINDINGS[self._get_key_symbol(k)] = \
                         message_converter.convert_dictionary_to_ros_message('control_msgs/JointJog', v)
                 for k, v in bindings["SettingBindings"].items():
-                    self.SETTING_BINDINGS[self._get_key_symbol(k)] = \
+                    self.SETTING_BINDINGS[self._get_real_key(k)] = \
                         getattr(SetTeleopSettingsRequest, v)
                 self.INPUT_DESCRIPTION = bindings["Description"]
         except (KeyError, AttributeError):
@@ -69,11 +54,11 @@ class TeleoperationInput(object):
             raise KeyError("Error in binding-config syntax")
 
     @staticmethod
-    def _get_key_symbol(k):
+    def _get_real_key(k):
         return k
 
     def _publish_bindings_to_driver_window(self):
-        win_conf_pub = rospy.Publisher("/%s/display_input_config" % rospy.get_name(), String, queue_size=1, latch=True)
+        win_conf_pub = rospy.Publisher("/teleoperation/display_input_config", String, queue_size=1, latch=True)
         win_conf_pub.publish(self.INPUT_DESCRIPTION)
 
     def resolve_key_input(self):

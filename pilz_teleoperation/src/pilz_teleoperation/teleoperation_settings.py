@@ -17,8 +17,9 @@ from pilz_teleoperation.srv import SetTeleopSettingsRequest
 
 """ Settings for teleoperation driver to configure e.g. the jogging-plane and velocity """
 
-WORLD_FRAME = "world"
-TCP_FRAME = "prbt_tcp"
+FRAMES = ["world", "prbt_tcp"]
+JOINTS = ["prbt_joint_1", "prbt_joint_2", "prbt_joint_3", "prbt_joint_4", "prbt_joint_5", "prbt_joint_6"]
+
 VELOCITY_SPEEDUP_LINEAR = 0.01
 VELOCITY_SPEEDUP_ANGULAR = 0.01
 MAX_VELOCITY_LINEAR = 1.0
@@ -49,8 +50,9 @@ def _increase_angular_velocity(settings):
     return True
 
 
-def _toggle_target_frame_world_tcp(settings):
-    settings.frame = TCP_FRAME if settings.frame == WORLD_FRAME else WORLD_FRAME
+def _toggle_target_frame(settings):
+    settings.frame_id = settings.frame_id + 1 % len(FRAMES)
+    settings.frame = FRAMES[settings.frame_id]
     return True
 
 
@@ -62,18 +64,35 @@ def _toggle_projection_plane(settings):
     return True
 
 
+def _toggle_joint_up(settings):
+    settings.joint_index = settings.joint_index + 1 % len(FRAMES)
+    settings.joint = FRAMES[settings.joint_index]
+    return True
+
+
+def _toggle_joint_down(settings):
+    settings.joint_index = settings.joint_index - 1 % len(FRAMES)
+    settings.joint = FRAMES[settings.joint_index]
+    return True
+
+
 class TeleoperationSettings:
     setting_change_method_bindings = {
         SetTeleopSettingsRequest.DECREASE_ANGULAR_VELOCITY: _decrease_angular_velocity,
         SetTeleopSettingsRequest.INCREASE_ANGULAR_VELOCITY: _increase_angular_velocity,
         SetTeleopSettingsRequest.DECREASE_LINEAR_VELOCITY: _decrease_linear_velocity,
         SetTeleopSettingsRequest.INCREASE_LINEAR_VELOCITY: _increase_linear_velocity,
-        SetTeleopSettingsRequest.TOGGLE_WORLD_AND_TCP_FRAME: _toggle_target_frame_world_tcp,
-        SetTeleopSettingsRequest.TOGGLE_PLANE: _toggle_projection_plane
+        SetTeleopSettingsRequest.TOGGLE_TARGET_FRAME: _toggle_target_frame,
+        SetTeleopSettingsRequest.TOGGLE_PLANE: _toggle_projection_plane,
+        SetTeleopSettingsRequest.TOGGLE_JOINT_UP: _toggle_joint_up,
+        SetTeleopSettingsRequest.TOGGLE_JOINT_DOWN: _toggle_joint_down
     }
 
     def __init__(self):
         self.angular_velocity = DEFAULT_VELOCITY_ANGULAR
         self.linear_velocity = DEFAULT_VELOCITY_LINEAR
-        self.frame = WORLD_FRAME
+        self.frame = FRAMES[0]
+        self.frame_index = 0
+        self.joint = JOINTS[0]
+        self.joint_index = 0
         self.movement_projection_plane = SetTeleopSettingsRequest.USE_XY_PLANE

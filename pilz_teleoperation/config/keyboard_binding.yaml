@@ -13,15 +13,26 @@ MovementBindings:
   'j': {angular: {x: 1}}
   'k': {angular: {y: 1}}
   'l': {angular: {z: 1}}
+JointJogBindings:
+  'KEY_RIGHT': {"velocities": [1]}
+  'KEY_LEFT': {"velocities": [-1]}
+  'KEY_UP': {"joint_names": ["prbt_joint_2", "prbt_joint_3", "prbt_joint_5"], "velocities": [1, -1, -1]}
+  'KEY_DOWN': {"joint_names": ["prbt_joint_2", "prbt_joint_3", "prbt_joint_5"], "velocities": [-1, 1, 1]}
 SettingBindings:
   '+': "INCREASE_LINEAR_VELOCITY"
   '-': "DECREASE_LINEAR_VELOCITY"
   '*': "TOGGLE_PLANE"
-  '/': "TOGGLE_WORLD_AND_TCP_FRAME"
+  '/': "TOGGLE_TARGET_FRAME"
   ',': "TOGGLE_CONTROLLER"
+  'KEY_PPAGE': "TOGGLE_JOINT_DOWN"
+  'KEY_NPAGE': "TOGGLE_JOINT_UP"
 Description: |-
-        - Use numpad numbers to move!
+        - Use numpad numbers to move cartesian!
         - '+' = increase velocity
         - '-' = decrease velocity
         - '*' = Toggle Plane to move on
         - '/' = Toggle between 'world' and 'tcp' frame
+        - 'Page Up' = Toggle to next joint
+        - 'Page Down' = Toggle to previous joint
+        - Use Arrows LEFT | RIGHT to jog toggled joint
+        - USE Arrows UP | DOWN to jog joints 2, 3 and 5 simulatnious

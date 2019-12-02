@@ -19,9 +19,8 @@ import yaml
 import rospkg
 
 from std_msgs.msg import String
-from geometry_msgs.msg import Twist, Vector3
 from rospy_message_converter import message_converter
-from pilz_teleoperation.srv import SetTeleopSettingsRequest, SetTeleopSettings
+from pilz_teleoperation.srv import SetTeleopSettingsRequest
 
 
 class CursesKeyInput(TeleoperationInput):

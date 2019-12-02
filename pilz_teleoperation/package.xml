@@ -23,6 +23,7 @@
 
   <exec_depend>message_runtime</exec_depend>
   <exec_depend>rospy_message_converter</exec_depend>
+  <exec_depend>yaml</exec_depend>
   <exec_depend>geometry_msgs</exec_depend>
   <exec_depend>control_msgs</exec_depend>
   <exec_depend>rospy</exec_depend>

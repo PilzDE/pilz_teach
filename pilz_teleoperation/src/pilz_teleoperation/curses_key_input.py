@@ -28,6 +28,9 @@ class CursesKeyInput(object):
         The move commands are published on a 2D plane that can be toggled between XY, XZ and YZ
         Additional Settings like target frame or velocity scaling are published separately.
     """
+    MOVE_BINDINGS = {}
+    SETTING_BINDINGS = {}
+    INPUT_DESCRIPTION = ""
 
     def __init__(self, stdscr, driver):
         super(CursesKeyInput, self).__init__()
@@ -35,7 +38,7 @@ class CursesKeyInput(object):
         self._try_to_load_config(key_config_path)
         self.__driver = driver
         self.__init_curses(stdscr)
-        self.__publish_bindings_to_driver_window()
+        self._publish_bindings_to_driver_window()
 
     @staticmethod
     def __get_default_config_path():
@@ -44,38 +47,46 @@ class CursesKeyInput(object):
     def _try_to_load_config(self, config_path):
         try:
             with open(config_path, "r") as file_:
-                self.bindings = yaml.load(file_.read())
-                for k, v in self.bindings["MovementBindings"].items():
-                    self.bindings["MovementBindings"][k] = \
+                bindings = yaml.load(file_.read())
+                for k, v in bindings["MovementBindings"].items():
+                    self.MOVE_BINDINGS[self._get_curses_key(k)] = \
                         message_converter.convert_dictionary_to_ros_message('geometry_msgs/Twist', v)
+                for k, v in bindings["SettingBindings"].items():
+                    self.SETTING_BINDINGS[self._get_curses_key(k)] = \
+                        getattr(SetTeleopSettingsRequest, v)
+                self.INPUT_DESCRIPTION = bindings["Description"]
         except (KeyError, AttributeError):
             rospy.logerr("Unable to parse key binding config")
             raise KeyError("Error in binding-config syntax")
+
+    @staticmethod
+    def _get_curses_key(k):
+        try:
+            return ord(k)
+        except TypeError:
+            return getattr(curses, k)
 
     def __init_curses(self, stdscr):
         curses.cbreak()
         self._screen = stdscr
         self._screen.nodelay(True)
 
-    def __publish_bindings_to_driver_window(self):
+    def _publish_bindings_to_driver_window(self):
         win_conf_pub = rospy.Publisher("teleop_input_config_msg", String, queue_size=1, latch=True)
-        win_conf_pub.publish(self.bindings["Description"])
+        win_conf_pub.publish(self.INPUT_DESCRIPTION)
 
     def resolve_key_input(self):
         """ Read currently pressed key and publish it to the driver.
             Should be called with at least 10 HZ!
         """
         key_code = self._read_keyboard_input()
-        if key_code in self.bindings["MovementBindings"]:
-            self.__driver.set_twist_command(self.bindings["MovementBindings"][key_code])
-        elif key_code in self.bindings["SettingBindings"]:
-            new_settings = SetTeleopSettingsRequest(pressed_commands=[self.bindings["SettingBindings"][key_code]])
+        if key_code in self.MOVE_BINDINGS:
+            self.__driver.set_twist_command(self.MOVE_BINDINGS[key_code])
+        elif key_code in self.SETTING_BINDINGS:
+            new_settings = SetTeleopSettingsRequest(pressed_commands=[self.SETTING_BINDINGS[key_code]])
             self.__driver.set_teleop_settings(new_settings)
 
     def _read_keyboard_input(self):
         key_code = self._screen.getch()
         curses.flushinp()
-        try:
-            return chr(key_code)
-        except ValueError:
-            return -1
+        return key_code

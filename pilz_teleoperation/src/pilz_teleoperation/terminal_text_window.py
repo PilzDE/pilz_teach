@@ -38,7 +38,7 @@ class TeleoperationWindow(object):
             "target_frame": "",
             "plane": ""
         }
-        self._input_conf_subscriber = rospy.Subscriber("teleop_input_config_msg",
+        self._input_conf_subscriber = rospy.Subscriber("/teleoperation/display_input_config",
                                                        String,
                                                        self._telop_input_config_msg,
                                                        queue_size=1)

@@ -31,15 +31,20 @@ class CursesKeyInput(object):
 
     def __init__(self, stdscr, driver):
         super(CursesKeyInput, self).__init__()
-        self._try_to_load_config()
+        key_config_path = rospy.get_param("~bindings", self.__get_default_config_path())
+        self._try_to_load_config(key_config_path)
         self.__driver = driver
         self.__init_curses(stdscr)
         self.__publish_bindings_to_driver_window()
 
-    def _try_to_load_config(self):
+    @staticmethod
+    def __get_default_config_path():
+        return rospkg.RosPack().get_path("pilz_teleoperation") + "/config/keyboard_binding.yaml"
+
+    def _try_to_load_config(self, config_path):
         try:
-            with open(rospkg.RosPack().get_path("pilz_teleoperation") + "/config/keyboard_binding.yaml", "r") as file_:
-                self.bindings = yaml.safe_load(file_.read())
+            with open(config_path, "r") as file_:
+                self.bindings = yaml.load(file_.read())
                 for k, v in self.bindings["MovementBindings"].items():
                     self.bindings["MovementBindings"][k] = \
                         message_converter.convert_dictionary_to_ros_message('geometry_msgs/Twist', v)

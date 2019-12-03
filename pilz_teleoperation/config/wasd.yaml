@@ -1,0 +1,23 @@
+MovementBindings:
+  'w': {linear: {x: -1}}
+  's': {linear: {x: 1}}
+  'a': {linear: {y: -1}}
+  'd': {linear: {y: 1}}
+  'q': {linear: {z: -1}}
+  'e': {linear: {z: 1}}
+  'KEY_RIGHT': {angular: {x: 1}}
+  'KEY_LEFT': {angular: {x: -1}}
+JointJogBindings:
+  'z': {"velocities": [1]}
+SettingBindings:
+  '+': "TOGGLE_VELOCITY_UP"
+  '-': "TOGGLE_VELOCITY_DOWN"
+  'KEY_UP': "TOGGLE_ROTATION_AXIS_UP"
+  'KEY_DOWN': "TOGGLE_ROTATION_AXIS_DOWN"
+Description: |-
+  - 'q' 'w' 'e' = z- x- z+	
+  - 'a' 's' 'd' = y- x+ y+	
+  - '+' = TOGGLE velocity up
+  - '-' = TOGGLE velocity down
+  - 'UP'= TOGGLE rotation axis up
+  - 'DOWN' = TOGGLE rotation axis down

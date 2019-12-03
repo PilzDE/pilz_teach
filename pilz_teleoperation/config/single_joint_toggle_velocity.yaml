@@ -1,0 +1,25 @@
+MovementBindings:
+  'q': {linear: {x: .2}}
+  'a': {linear: {x: -0.2}}
+  'w': {linear: {y: .2}}
+  's': {linear: {y: -0.2}}
+  'e': {linear: {z: .2}}
+  'd': {linear: {z: -0.2}}
+  'Q': {linear: {x: 1}}
+  'A': {linear: {x: -1}}
+  'W': {linear: {y: 1}}
+  'S': {linear: {y: -1}}
+  'E': {linear: {z: 1}}
+  'D': {linear: {z: -1}}
+JointJogBindings:
+  'z': {"velocities": [1]}
+SettingBindings:
+  'KEY_UP': "INCREASE_LINEAR_VELOCITY"
+  'KEY_DOWN': "DECREASE_LINEAR_VELOCITY"
+Description: |-
+  - 'q' 'w' 'e' = x+ y+ z+	slow
+  - 'a' 's' 'd' = x- y- z-	slow
+  - 'Q' 'W' 'E' = x++ y++ z++	fast
+  - 'A' 'S' 'D' = x-- y-- z--	fast
+  - 'UP' / 'DOWN' = Linear Speed + / -
+  - 'RIGHT' / 'LEFT' = Angular Speed + / -

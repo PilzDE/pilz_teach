@@ -113,6 +113,7 @@ class TeleoperationDriver(object):
         :type window: TeleoperationWindow
         """
         super(TeleoperationDriver, self).__init__()
+        rospy.on_shutdown(self._stop_robot)
         self._output_window = window
         self._settings = _teleop_settings.TeleoperationSettings()
         self.__last_twist_msg = TwistStamped()
@@ -177,7 +178,12 @@ class TeleoperationDriver(object):
             new_twist.scale_linear_velocity(self._settings.linear_velocity)
             new_twist.scale_angular_velocity(self._settings.angular_velocity)
             ts.twist = new_twist
+        else:
+            self._stop_robot()
         self._twist_publisher.publish(ts)
+
+    def _stop_robot(self):
+        self._twist_publisher.publish(self.__get_stamped_twist())
 
     def _send_updated_jog(self):
         js = JointJog()

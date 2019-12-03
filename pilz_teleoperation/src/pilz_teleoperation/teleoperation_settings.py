@@ -51,8 +51,8 @@ def _increase_angular_velocity(settings):
 
 
 def _toggle_target_frame(settings):
-    settings.frame_id = settings.frame_id + 1 % len(FRAMES)
-    settings.frame = FRAMES[settings.frame_id]
+    settings.frame_index = (settings.frame_index + 1) % len(FRAMES)
+    settings.frame = FRAMES[settings.frame_index]
     return True
 
 
@@ -65,14 +65,14 @@ def _toggle_projection_plane(settings):
 
 
 def _toggle_joint_up(settings):
-    settings.joint_index = settings.joint_index + 1 % len(FRAMES)
-    settings.joint = FRAMES[settings.joint_index]
+    settings.joint_index = (settings.joint_index + 1) % len(JOINTS)
+    settings.joint = JOINTS[settings.joint_index]
     return True
 
 
 def _toggle_joint_down(settings):
-    settings.joint_index = settings.joint_index - 1 % len(FRAMES)
-    settings.joint = FRAMES[settings.joint_index]
+    settings.joint_index = (settings.joint_index - 1) % len(JOINTS)
+    settings.joint = JOINTS[settings.joint_index]
     return True
 
 

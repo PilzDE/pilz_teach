@@ -14,7 +14,6 @@ SettingBindings:
   '-': "TOGGLE_VELOCITY_DOWN"
   'KEY_UP': "TOGGLE_ROTATION_AXIS_UP"
   'KEY_DOWN': "TOGGLE_ROTATION_AXIS_DOWN"
-  ' ': "TOGGLE_TARGET_FRAME"
 Description: |-
   - 'q' 'w' 'e' = z- x- z+	
   - 'a' 's' 'd' = y- x+ y+	
@@ -22,6 +21,3 @@ Description: |-
   - '-' = TOGGLE velocity down
   - 'UP'= TOGGLE rotation axis up
   - 'DOWN' = TOGGLE rotation axis down
-  - 'LEFT' = ROTATE around axis +
-  - 'RIGHT' = ROTATE around axis -
-  - 'SPACE' = TOGGLE target frame

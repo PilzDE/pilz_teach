@@ -25,15 +25,15 @@ JointJogBindings:
   'ü': {"joint_names": ["prbt_joint_6"], "velocities": [1]}
   'ä': {"joint_names": ["prbt_joint_6"], "velocities": [-1]}
 SettingBindings:
-  '1': "INCREASE_LINEAR_VELOCITY"
-  '2': "DECREASE_LINEAR_VELOCITY"
-  '4': "INCREASE_ANGULAR_VELOCITY"
-  '5': "DECREASE_ANGULAR_VELOCITY"
+  'KEY_UP': "INCREASE_LINEAR_VELOCITY"
+  'KEY_DOWN': "DECREASE_LINEAR_VELOCITY"
+  'KEY_RIGHT': "INCREASE_ANGULAR_VELOCITY"
+  'KEY_LEFT': "DECREASE_ANGULAR_VELOCITY"
   'KEY_ENTER': "TOGGLE_TARGET_FRAME"
 Description: |-
   - 'q' 'w' 'e' = x+ y+ z+
   - 'a' 's' 'd' = x- y- z-
   - 'z' 'u' 'i' 'o' 'p' 'ue' = [joint1 - joint 6] + 
   - 'h' 'j' 'k' 'l' 'oe' 'ae' = [joint1 - joint 6] -
-  - '1' / '2' = Linear Speed + / -
-  - '3' / '4' = Angular Speed + / -
+  - 'UP' / 'DOWN' = Linear Speed + / -
+  - 'RIGHT' / 'LEFT' = Angular Speed + / -

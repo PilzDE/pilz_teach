@@ -24,15 +24,15 @@ SettingBindings:
   '*': "TOGGLE_PLANE"
   '/': "TOGGLE_TARGET_FRAME"
   ',': "TOGGLE_CONTROLLER"
-  'KEY_PPAGE': "TOGGLE_JOINT_DOWN"
-  'KEY_NPAGE': "TOGGLE_JOINT_UP"
+  'KEY_PPAGE': "TOGGLE_JOINT_UP"
+  'KEY_NPAGE': "TOGGLE_JOINT_DOWN"
 Description: |-
         - Use numpad numbers to move cartesian!
         - '+' = increase velocity
         - '-' = decrease velocity
         - '*' = Toggle Plane to move on
         - '/' = Toggle between 'world' and 'tcp' frame
-        - 'Page Up' = Toggle to next joint
-        - 'Page Down' = Toggle to previous joint
-        - Use Arrows LEFT | RIGHT to jog toggled joint
-        - USE Arrows UP | DOWN to jog joints 2, 3 and 5 simulatnious
+        - 'Page Down' = Toggle to next joint
+        - 'Page Up' = Toggle to previous joint
+        - "LEFT | RIGHT" to jog toggled joint
+        - "UP | DOWN" to jog joints 2, 3 and 5 simulatnious

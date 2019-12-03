@@ -34,10 +34,11 @@ class TerminalTextWindow(TeleoperationWindow):
         self._write_line(3, "Settings:")
         self._write_line(4, "  - linear velocity: %.2f m/s \t angular velocity: %.2f rad/s"
                          % (self._infos["lin_vel"], self._infos["ang_vel"]))
-        self._write_line(5, "  - target frame:    %s moves on plane:   %s"
-                         % (self._infos["target_frame"].ljust(17), self._infos["plane"]))
-        self._write_line(7, "input configuration:")
-        self._write_line(8, self._infos["input_configuration"])
+        self._write_line(5, "  - moves_on_plane:  %s" % self._infos["plane"])
+        self._write_line(6, "  - current_joint:   %s" % self._infos["joint"])
+        self._write_line(7, "  - target frame:    %s" % (self._infos["target_frame"]))
+        self._write_line(9, "input configuration:")
+        self._write_line(10, self._infos["input_configuration"])
         self._end_page()
 
     def _start_page(self):

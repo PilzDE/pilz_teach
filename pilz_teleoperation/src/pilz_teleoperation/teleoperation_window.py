@@ -2,7 +2,6 @@ import abc
 
 import rospy
 from std_msgs.msg import String
-from pilz_teleoperation.teleoperation_settings import TeleoperationSettings
 
 
 class TeleoperationWindow(object):
@@ -16,24 +15,38 @@ class TeleoperationWindow(object):
 
     def __init__(self, *args, **kwargs):
         super(TeleoperationWindow, self).__init__(*args, **kwargs)
-        self._infos = TeleoperationSettings()
-        self._input_configuration_text = ""
+        self._infos = {
+            "input_configuration": "",
+            "lin_vel": 0,
+            "ang_vel": 0,
+            "target_frame": "",
+            "plane": "",
+            "joint": ""
+        }
         self._input_conf_subscriber = rospy.Subscriber("/teleoperation/display_input_config",
                                                        String,
                                                        self._telop_input_config_msg,
                                                        queue_size=1)
 
     def _telop_input_config_msg(self, msg):
-        self._input_configuration_text = msg.data
+        self._infos["input_configuration"] = msg.data
         self._redraw()
 
-    def driver_settings_changed(self, current_settings):
+    def driver_settings_changed(self, lin_vel, ang_vel, target_frame, plane, joint):
         """ Method to add new setting state.
             Automatically updates the window.
-        :param current_settings:
+        :param lin_vel:
+        :param ang_vel:
+        :param target_frame:
+        :param plane:
+        :param joint:
         :return:
         """
-        self._infos = current_settings
+        self._infos["lin_vel"] = lin_vel
+        self._infos["ang_vel"] = ang_vel
+        self._infos["target_frame"] = target_frame
+        self._infos["plane"] = plane
+        self._infos["joint"] = joint
         self._redraw()
 
     @abc.abstractmethod

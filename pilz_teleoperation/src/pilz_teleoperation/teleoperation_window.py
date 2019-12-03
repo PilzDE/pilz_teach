@@ -21,7 +21,8 @@ class TeleoperationWindow(object):
             "ang_vel": 0,
             "target_frame": "",
             "plane": "",
-            "joint": ""
+            "joint": "",
+            "roation_axis": ""
         }
         self._input_conf_subscriber = rospy.Subscriber("%s/display_input_config" % rospy.get_name(),
                                                        String,
@@ -32,7 +33,7 @@ class TeleoperationWindow(object):
         self._infos["input_configuration"] = msg.data
         self._redraw()
 
-    def driver_settings_changed(self, lin_vel, ang_vel, target_frame, plane, joint):
+    def driver_settings_changed(self, lin_vel, ang_vel, target_frame, plane, joint, rotation_axis):
         """ Method to add new setting state.
             Automatically updates the window.
         :param lin_vel:
@@ -40,6 +41,7 @@ class TeleoperationWindow(object):
         :param target_frame:
         :param plane:
         :param joint:
+        :param rotation_axis:
         :return:
         """
         self._infos["lin_vel"] = lin_vel
@@ -47,6 +49,7 @@ class TeleoperationWindow(object):
         self._infos["target_frame"] = target_frame
         self._infos["plane"] = plane
         self._infos["joint"] = joint
+        self._infos["rotation_axis"] = rotation_axis
         self._redraw()
 
     @abc.abstractmethod

@@ -169,7 +169,8 @@ class TeleoperationDriver(object):
                                                     self._settings.angular_velocity,
                                                     self._settings.frame,
                                                     self._settings.movement_projection_plane,
-                                                    self._settings.joint)
+                                                    self._settings.joint,
+                                                    ["x", "y", "z"][self._settings.rotation_axis])
 
     def set_twist_command(self, twist_):
         self.__last_twist_msg = self.__get_stamped_twist(twist_)

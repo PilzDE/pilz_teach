@@ -19,6 +19,7 @@ from pilz_teleoperation.srv import SetTeleopSettingsRequest
 
 FRAMES = ["world", "prbt_tcp"]
 JOINTS = ["prbt_joint_1", "prbt_joint_2", "prbt_joint_3", "prbt_joint_4", "prbt_joint_5", "prbt_joint_6"]
+VELOCITIES = [.2, .6, 1]
 
 VELOCITY_SPEEDUP_LINEAR = 0.01
 VELOCITY_SPEEDUP_ANGULAR = 0.01
@@ -76,6 +77,30 @@ def _toggle_joint_down(settings):
     return True
 
 
+def _toggle_velocity_up(settings):
+    settings.velocity_index = (settings.velocity_index + 1) % len(VELOCITIES)
+    settings.linear_velocity = VELOCITIES[settings.velocity_index]
+    settings.angular_velocity = VELOCITIES[settings.velocity_index]
+    return True
+
+
+def _toggle_velocity_down(settings):
+    settings.velocity_index = (settings.velocity_index - 1) % len(VELOCITIES)
+    settings.linear_velocity = VELOCITIES[settings.velocity_index]
+    settings.angular_velocity = VELOCITIES[settings.velocity_index]
+    return True
+
+
+def _toggle_rotation_axis_up(settings):
+    settings.rotation_axis = (settings.rotation_axis + 1) % 3
+    return True
+
+
+def _toggle_rotation_axis_down(settings):
+    settings.rotation_axis = (settings.rotation_axis - 1) % 3
+    return True
+
+
 class TeleoperationSettings:
     setting_change_method_bindings = {
         SetTeleopSettingsRequest.DECREASE_ANGULAR_VELOCITY: _decrease_angular_velocity,
@@ -85,7 +110,11 @@ class TeleoperationSettings:
         SetTeleopSettingsRequest.TOGGLE_TARGET_FRAME: _toggle_target_frame,
         SetTeleopSettingsRequest.TOGGLE_PLANE: _toggle_projection_plane,
         SetTeleopSettingsRequest.TOGGLE_JOINT_UP: _toggle_joint_up,
-        SetTeleopSettingsRequest.TOGGLE_JOINT_DOWN: _toggle_joint_down
+        SetTeleopSettingsRequest.TOGGLE_JOINT_DOWN: _toggle_joint_down,
+        SetTeleopSettingsRequest.TOGGLE_VELOCITY_UP: _toggle_velocity_up,
+        SetTeleopSettingsRequest.TOGGLE_VELOCITY_DOWN: _toggle_velocity_down,
+        SetTeleopSettingsRequest.TOGGLE_ROTATION_AXIS_UP: _toggle_rotation_axis_up,
+        SetTeleopSettingsRequest.TOGGLE_ROTATION_AXIS_DOWN: _toggle_rotation_axis_down
     }
 
     def __init__(self):
@@ -95,4 +124,6 @@ class TeleoperationSettings:
         self.frame_index = 0
         self.joint = JOINTS[0]
         self.joint_index = 0
+        self.velocity_index = 0
+        self.rotation_axis = 0
         self.movement_projection_plane = SetTeleopSettingsRequest.USE_XY_PLANE

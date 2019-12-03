@@ -15,6 +15,7 @@
 
 import rospy
 import math
+import copy
 import pilz_teleoperation.teleoperation_settings as _teleop_settings
 
 from geometry_msgs.msg import Twist, TwistStamped, Vector3
@@ -169,12 +170,7 @@ class TeleoperationDriver(object):
                 return SetTeleopSettingsResponse(success=False, error_msg="Unsupported Command")
 
     def _update_settings_display(self):
-        self._output_window.driver_settings_changed(self._settings.linear_velocity,
-                                                    self._settings.angular_velocity,
-                                                    self._settings.frame,
-                                                    self._settings.movement_projection_plane,
-                                                    self._settings.joint,
-                                                    ["x", "y", "z"][self._settings.rotation_axis])
+        self._output_window.driver_settings_changed(copy.copy(self._settings))
 
     def set_twist_command(self, twist_):
         self.__last_twist_msg = self.__get_stamped_twist(twist_)

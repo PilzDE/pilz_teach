@@ -32,13 +32,13 @@ class TerminalTextWindow(TeleoperationWindow):
         self._write_line(1, "PILZ teleoperation driver")
         self._write_line(3, "Settings:")
         self._write_line(4, "  - linear velocity: %.2f m/s \t angular velocity: %.2f rad/s"
-                         % (self._infos["lin_vel"], self._infos["ang_vel"]))
-        self._write_line(5, "  - moves_on_plane:  %s" % self._infos["plane"])
-        self._write_line(6, "  - current_joint:   %s" % self._infos["joint"])
-        self._write_line(7, "  - rotation_axis:   %s" % (self._infos["rotation_axis"]))
-        self._write_line(8, "  - target frame:    %s" % (self._infos["target_frame"]))
+                         % (self._infos.linear_velocity, self._infos.angular_velocity))
+        self._write_line(5, "  - moves_on_plane:  %s" % self._infos.movement_projection_plane)
+        self._write_line(6, "  - current_joint:   %s" % self._infos.joint)
+        self._write_line(7, "  - rotation_axis:   %s" % (["x", "y", "z"][self._infos.rotation_axis]))
+        self._write_line(8, "  - target frame:    %s" % self._infos.frame)
         self._write_line(10, "input configuration:")
-        self._write_line(11, self._infos["input_configuration"])
+        self._write_line(11, self._input_configuration_text)
         self._end_page()
 
     def _start_page(self):

@@ -39,6 +39,12 @@ class _TeleoperationTwist(object):
         elif projection_plane == SetTeleopSettingsRequest.USE_YZ_PLANE:
             self.linear.x, self.linear.y, self.linear.z = 0, self.linear.x, self.linear.y
 
+    def change_rotation_axis(self, axis):
+        if axis == 1:
+            self.angular.x, self.angular.y = 0, self.angular.x
+        elif axis == 2:
+            self.angular.x, self.angular.z = 0, self.angular.x
+
     def normalize(self):
         norm = math.sqrt(self.linear.x ** 2 + self.linear.y ** 2 + self.linear.z ** 2)
         if norm > 0:
@@ -167,7 +173,8 @@ class TeleoperationDriver(object):
                                                     self._settings.angular_velocity,
                                                     self._settings.frame,
                                                     self._settings.movement_projection_plane,
-                                                    self._settings.joint)
+                                                    self._settings.joint,
+                                                    ["x", "y", "z"][self._settings.rotation_axis])
 
     def set_twist_command(self, twist_):
         self.__last_twist_msg = self.__get_stamped_twist(twist_)

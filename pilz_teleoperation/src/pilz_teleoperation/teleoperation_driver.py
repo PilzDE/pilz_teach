@@ -66,6 +66,11 @@ class _TeleoperationJointJog(object):
         if len(self.joint_names) == 0:
             self.joint_names = [current_joint]
 
+    def copy_jog_data(self, js):
+        js.joint_names = self.joint_names
+        js.velocities = self.velocities
+        js.displacements = self.displacements
+
 
 class TeleoperationDriver(object):
     """ Main class of the teleoperation driver.
@@ -98,8 +103,8 @@ class TeleoperationDriver(object):
     def __ros_init(self):
         self._hz = rospy.Rate(20)
         self._sv_settings = rospy.Service("/teleoperation/set_settings", SetTeleopSettings, self.set_teleop_settings)
-        self._sub_twist = rospy.Subscriber("/teleoperation/twist", Twist, self.set_twist_command, queue_size=1)
-        self._sub_twist = rospy.Subscriber("/teleoperation/joint_jog", JointJog, self.set_twist_command, queue_size=1)
+        self._twist_subscriber = rospy.Subscriber("/teleoperation/twist", Twist, self.set_twist_command, queue_size=1)
+        self._joint_subscriber = rospy.Subscriber("/teleoperation/joint_jog", JointJog, self.set_joint_jog_command, queue_size=1)
         self._twist_publisher = rospy.Publisher("/jog_server/delta_jog_cmds", TwistStamped, queue_size=1)
         self._jog_publisher = rospy.Publisher("/jog_server/joint_delta_jog_cmds", JointJog, queue_size=1)
 
@@ -160,15 +165,12 @@ class TeleoperationDriver(object):
         self._twist_publisher.publish(ts)
 
     def _send_updated_jog(self):
-        js = JointJog()
+        js = JointJog(stamp=rospy.Time.now(), frame_id=self._settings.frame)
         if self.__key_input_is_new_enough(self.__last_jog_msg):
             new_jog = _TeleoperationJointJog(joint_jog=self.__last_jog_msg)
             new_jog.choose_joint_to_jog(self._settings.joint)
             new_jog.scale_linear_velocity(self._settings.linear_velocity)
-            js.joint_names = new_jog.joint_names
-            js.velocities = new_jog.velocities
-            js.displacements = new_jog.displacements
-            js.header.stamp = rospy.Time.now()
+            new_jog.copy_jog_data(js)
         else:
             js.joint_names = _teleop_settings.JOINTS
             js.velocities = [0] * len(_teleop_settings.JOINTS)

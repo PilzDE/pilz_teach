@@ -30,7 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   </include>
 
   <include file="$(find prbt_moveit_config)/launch/moveit_rviz.launch">
-    <arg name="rviz_config" value="$(find prbt_moveit_config)/launch/moveit.rviz" />
+    <arg name="rviz_config" value="$(find prbt_jog_arm_support)/config/rviz_default.rviz" />
   </include>
 
 

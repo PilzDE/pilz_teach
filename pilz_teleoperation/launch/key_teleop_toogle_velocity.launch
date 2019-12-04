@@ -18,4 +18,5 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     <node name="key_input" pkg="pilz_teleoperation" type="key_teleop.py" output="screen">
         <param name="bindings" value="$(find pilz_teleoperation)/config/speed_button.yaml" />
     </node>
+    <!--<node name="marker_publisher" pkg="pilz_teleoperation" type="usability_test_markers.py" output="screen"/>-->
 </launch>

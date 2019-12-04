@@ -30,12 +30,12 @@ def setup_generic_marker():
     m.pose.position.y = 1.0
     m.pose.position.z = 1.0
     m.pose.orientation.w = 1
-    m.scale.x = 1.0
-    m.scale.y = 1.0
-    m.scale.z = 1.0
-    m.color.r = 0.0
+    m.scale.x = 0.05
+    m.scale.y = 0.05
+    m.scale.z = 0.05
+    m.color.r = 1.0
     m.color.g = 1.0
-    m.color.b = 0.0
+    m.color.b = 1.0
     m.color.a = 1.0
     return m
 

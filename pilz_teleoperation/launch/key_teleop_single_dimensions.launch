@@ -1,0 +1,5 @@
+<launch>
+    <node name="key_input" pkg="pilz_teleoperation" type="key_teleop.py" output="screen">
+        <param name="bindings" value="$(find pilz_teleoperation)/config/single_joint.yaml" />
+    </node>
+</launch>

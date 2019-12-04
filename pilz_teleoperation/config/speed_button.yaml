@@ -11,6 +11,18 @@ MovementBindings:
   'S': {linear: {y: -1}}
   'E': {linear: {z: 1}}
   'D': {linear: {z: -1}}
+  'u': {angular: {x: -0.2}}
+  'i': {angular: {y: -0.2}}
+  'o': {angular: {z: -0.2}}
+  'j': {angular: {x: .2}}
+  'k': {angular: {y: .2}}
+  'l': {angular: {z: .2}}
+  'U': {angular: {x: -1}}
+  'I': {angular: {y: -1}}
+  'O': {angular: {z: -1}}
+  'J': {angular: {x: 1}}
+  'K': {angular: {y: 1}}
+  'L': {angular: {z: 1}}
 JointJogBindings:
   'z': {"velocities": [1]}
 SettingBindings:
@@ -21,5 +33,9 @@ Description: |-
   - 'a' 's' 'd' = x- y- z-	slow
   - 'Q' 'W' 'E' = x++ y++ z++	fast
   - 'A' 'S' 'D' = x-- y-- z--	fast
+  - 'u' 'i' 'o' = x+ y+ z+	slow
+  - 'j' 'k' 'l' = x- y- z-	slow
+  - 'U' 'I' 'O' = x++ y++ z++	fast
+  - 'J' 'K' 'L' = x-- y-- z--	fast
   - 'UP' / 'DOWN' = Linear Speed + / -
   - 'RIGHT' / 'LEFT' = Angular Speed + / -

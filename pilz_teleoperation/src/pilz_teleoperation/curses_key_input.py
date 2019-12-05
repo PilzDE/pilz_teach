@@ -27,14 +27,21 @@ class CursesKeyInput(object):
         Additional Settings like target frame or velocity scaling are published separately.
     """
     MOVE_BINDINGS = {
-        ord('7'): Vector3(-1, 1, 0),
-        ord('8'): Vector3(0, 1, 0),
-        ord('9'): Vector3(1, 1, 0),
-        ord('6'): Vector3(1, 0, 0),
-        ord('3'): Vector3(1, -1, 0),
-        ord('2'): Vector3(0, -1, 0),
-        ord('1'): Vector3(-1, -1, 0),
-        ord('4'): Vector3(-1, 0, 0)
+        ord('7'): Twist(linear=Vector3(-1, 1, 0)),
+        ord('8'): Twist(linear=Vector3(0, 1, 0)),
+        ord('9'): Twist(linear=Vector3(1, 1, 0)),
+        ord('6'): Twist(linear=Vector3(1, 0, 0)),
+        ord('3'): Twist(linear=Vector3(1, -1, 0)),
+        ord('2'): Twist(linear=Vector3(0, -1, 0)),
+        ord('1'): Twist(linear=Vector3(-1, -1, 0)),
+        ord('4'): Twist(linear=Vector3(-1, 0, 0)),
+        
+        ord('u'): Twist(angular=Vector3(-1, 0, 0)),
+        ord('i'): Twist(angular=Vector3(0, -1, 0)),
+        ord('o'): Twist(angular=Vector3(0, 0, -1)),
+        ord('j'): Twist(angular=Vector3(1, 0, 0)),
+        ord('k'): Twist(angular=Vector3(0, 1, 0)),
+        ord('l'): Twist(angular=Vector3(0, 0, 1)),
     }
     SETTING_BINDINGS = {
         ord('+'): SetTeleopSettingsRequest.INCREASE_LINEAR_VELOCITY,
@@ -51,21 +58,16 @@ class CursesKeyInput(object):
                    "     * = Toggle Plane to move on\n" \
                    "     / = Toggle between 'world' and 'tcp' frame"
 
-    def __init__(self, stdscr):
+    def __init__(self, stdscr, driver):
         super(CursesKeyInput, self).__init__()
+        self.__driver = driver
         self.__init_curses(stdscr)
-        self.__init_ros()
         self.__publish_bindings_to_driver_window()
 
     def __init_curses(self, stdscr):
         curses.cbreak()
         self._screen = stdscr
         self._screen.nodelay(True)
-
-    def __init_ros(self):
-        self._hz = rospy.Rate(20)
-        self._twist_pub = rospy.Publisher("/teleop_twist", Twist, queue_size=1)
-        self._setting_srv = rospy.ServiceProxy("/set_teleop_settings", SetTeleopSettings)
 
     def __publish_bindings_to_driver_window(self):
         win_conf_pub = rospy.Publisher("teleop_input_config_msg", String, queue_size=1, latch=True)
@@ -75,9 +77,16 @@ class CursesKeyInput(object):
         """ Read currently pressed key and publish it to the driver.
             Should be called with at least 10 HZ!
         """
-        key_code = self._screen.getch()
+        key_code = self._read_keyboard_input()
+
         if key_code in CursesKeyInput.MOVE_BINDINGS:
-            self._twist_pub.publish(Twist(linear=CursesKeyInput.MOVE_BINDINGS[key_code]))
+            self.__driver.set_twist_command(CursesKeyInput.MOVE_BINDINGS[key_code])
         elif key_code in CursesKeyInput.SETTING_BINDINGS:
-            self._setting_srv(SetTeleopSettingsRequest(pressed_commands=[CursesKeyInput.SETTING_BINDINGS[key_code]]))
+            new_settings = SetTeleopSettingsRequest(pressed_commands=[CursesKeyInput.SETTING_BINDINGS[key_code]])
+            self.__driver.set_teleop_settings(new_settings)
+
+    def _read_keyboard_input(self):
+        key_code = self._screen.getch()
+        curses.flushinp()
+        return key_code
 

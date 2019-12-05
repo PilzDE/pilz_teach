@@ -78,11 +78,11 @@ class TeleoperationDriver(object):
 
     def __ros_init(self):
         self._hz = rospy.Rate(20)
-        self._sv_settings = rospy.Service("set_teleop_settings", SetTeleopSettings, self._set_teleop_settings)
-        self._sub_twist = rospy.Subscriber("teleop_twist", Twist, self._twist_command_cb, queue_size=1)
+        self._sv_settings = rospy.Service("set_teleop_settings", SetTeleopSettings, self.set_teleop_settings)
+        self._sub_twist = rospy.Subscriber("teleop_twist", Twist, self.set_twist_command, queue_size=1)
         self._twist_publisher = rospy.Publisher("/jog_server/delta_jog_cmds", TwistStamped, queue_size=1)
 
-    def _set_teleop_settings(self, req):
+    def set_teleop_settings(self, req):
         for command in req.pressed_commands:
             try:
                 success = self._settings.setting_change_method_bindings[command](self._settings)
@@ -100,7 +100,7 @@ class TeleoperationDriver(object):
                                                     self._settings.frame,
                                                     self._settings.get_current_plane_string())
 
-    def _twist_command_cb(self, twist_):
+    def set_twist_command(self, twist_):
         self.__last_twist_msg = self.__get_stamped_twist(twist_)
 
     def __get_stamped_twist(self, twist_=None):

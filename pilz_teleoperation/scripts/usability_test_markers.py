@@ -18,6 +18,7 @@
 import rospy
 from visualization_msgs.msg import Marker
 
+
 def setup_generic_marker():
     m = Marker()
     m.action = Marker.ADD
@@ -25,14 +26,14 @@ def setup_generic_marker():
     m.header.stamp = rospy.Time.now()
     m.ns = 'usability_test_marker'
     m.id = 0
-    m.type = Marker.SPHERE
+    m.type = Marker.ARROW
     m.pose.position.x = 1.0
     m.pose.position.y = 1.0
     m.pose.position.z = 1.0
     m.pose.orientation.w = 1
-    m.scale.x = 0.05
-    m.scale.y = 0.05
-    m.scale.z = 0.05
+    m.scale.x = 0.15
+    m.scale.y = 0.01
+    m.scale.z = 0.01
     m.color.r = 1.0
     m.color.g = 1.0
     m.color.b = 1.0

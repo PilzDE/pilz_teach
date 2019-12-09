@@ -45,18 +45,18 @@ class UsabilityTestMarkerPublisher(object):
         self.arrow.scale.z = 0.01
 
     def set_custom_text_marker(self):
-        self.text_marker = Marker()
-        self.text_marker.action = Marker.ADD
-        self.text_marker.header.frame_id = '/world'
-        self.text_marker.ns = 'usability_test_order'
-        self.text_marker.type = Marker.TEXT_VIEW_FACING
-        self.text_marker.color.r = 1.0
-        self.text_marker.color.g = 1.0
-        self.text_marker.color.b = 1.0
-        self.text_marker.color.a = 1.0
-        self.text_marker.scale.x = .5
-        self.text_marker.scale.y = 0.5
-        self.text_marker.scale.z = 0.2
+        self.order_marker = Marker()
+        self.order_marker.action = Marker.ADD
+        self.order_marker.header.frame_id = '/world'
+        self.order_marker.ns = 'usability_test_order'
+        self.order_marker.type = Marker.TEXT_VIEW_FACING
+        self.order_marker.color.r = 1.0
+        self.order_marker.color.g = 1.0
+        self.order_marker.color.b = 1.0
+        self.order_marker.color.a = 1.0
+        self.order_marker.scale.x = .5
+        self.order_marker.scale.y = 0.5
+        self.order_marker.scale.z = 0.2
 
     def set_custom_marker_poses(self):
         self.set_custom_marker_positions()
@@ -84,11 +84,11 @@ class UsabilityTestMarkerPublisher(object):
         return self.arrow
 
     def get_order_marker(self, ii):
-        self.text_marker.header.stamp = rospy.Time.now()
-        self.text_marker.id = ii
-        self.text_marker.pose.position = self.positions[ii]
-        self.text_marker.text = str(ii + 1)
-        return self.text_marker
+        self.order_marker.header.stamp = rospy.Time.now()
+        self.order_marker.id = ii
+        self.order_marker.pose.position = self.positions[ii]
+        self.order_marker.text = str(ii + 1)
+        return self.order_marker
 
     def publish_markers(self):
         while not rospy.is_shutdown():

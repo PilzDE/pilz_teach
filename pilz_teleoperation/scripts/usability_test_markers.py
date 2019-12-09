@@ -61,7 +61,7 @@ class UsabilityTestMarkerPublisher(object):
         self.set_custom_marker_positions()
         self.set_custom_marker_orientations()
         self.poses = list()
-        for ii in range(6):
+        for ii in range(9):
             self.poses.append(Pose(self.positions[ii], self.orientations[ii]))
 
     def set_custom_marker_positions(self):
@@ -71,7 +71,10 @@ class UsabilityTestMarkerPublisher(object):
         self.positions.append(Point(0, .4, .5))
         self.positions.append(Point(-.4, -.2, .3))
         self.positions.append(Point(-.4, .2, .3))
-        self.positions.append(Point(-6, -.4, .3))
+        self.positions.append(Point(-.1, -.3, .1))
+        self.positions.append(Point(-.4, -.2, .3))
+        self.positions.append(Point(-.4, -.2, .3))
+        self.positions.append(Point(-.4, -.2, .3))
 
     def set_custom_marker_orientations(self):
         self.orientations = list()
@@ -81,6 +84,9 @@ class UsabilityTestMarkerPublisher(object):
         self.orientations.append(Quaternion(0, math.sqrt(.5), 0, math.sqrt(.5)))
         self.orientations.append(Quaternion(0, math.sqrt(.5), 0, math.sqrt(.5)))
         self.orientations.append(Quaternion(0, math.sqrt(.5), 0, math.sqrt(.5)))
+        self.orientations.append(Quaternion(0, math.sqrt(.5), 0, math.sqrt(.5)))
+        self.orientations.append(Quaternion(0, math.sqrt(.4), math.sqrt(.4), math.sqrt(.2)))
+        self.orientations.append(Quaternion(math.sqrt(.4), math.sqrt(.4), 0, math.sqrt(.2)))
 
     def get_arrow(self, ii):
         self.arrow.header.stamp = rospy.Time.now()
@@ -90,7 +96,7 @@ class UsabilityTestMarkerPublisher(object):
 
     def get_order_marker(self, ii):
         self.order_marker.header.stamp = rospy.Time.now()
-        self.order_marker.id = ii
+        self.order_marker.id = ii % 3
         self.order_marker.pose.position = self.positions[ii]
         self.order_marker.text = str(ii % 3 + 1)
         return self.order_marker
@@ -99,13 +105,13 @@ class UsabilityTestMarkerPublisher(object):
         while not rospy.is_shutdown():
             for ii in range(3):
                 self.pub.publish(self.get_arrow(ii + test_number * 3))
-                self.pub.publish(self.get_order_marker(ii))
+                self.pub.publish(self.get_order_marker(ii + test_number * 3))
             self.rate.sleep()
 
 if __name__ == '__main__':
     publisher = UsabilityTestMarkerPublisher()
 
-    user_input = raw_input("Which test? (1/2): ")
+    user_input = raw_input("Which test? (1/2/3): ")
 
     if user_input == '1':
         try:
@@ -116,5 +122,11 @@ if __name__ == '__main__':
     if user_input == '2':
         try:
             publisher.publish_markers(1)
+        except rospy.ROSInterruptException:
+            pass
+
+    if user_input == '3':
+        try:
+            publisher.publish_markers(2)
         except rospy.ROSInterruptException:
             pass

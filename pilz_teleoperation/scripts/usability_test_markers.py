@@ -17,6 +17,7 @@
 
 import rospy
 from visualization_msgs.msg import Marker
+from geometry_msgs.msg import *
 
 class UsabilityTestMarkerPublisher(object):
 
@@ -37,19 +38,28 @@ class UsabilityTestMarkerPublisher(object):
         self.m.color.g = 1.0
         self.m.color.b = 1.0
         self.m.color.a = 1.0
-        self.m.scale.x = 0.15
+        self.m.scale.x = .5
         self.m.scale.y = 0.01
         self.m.scale.z = 0.01
 
         self.m.header.stamp = rospy.Time.now()
         self.m.id = 0
-        self.m.pose.position.x = 1.0
-        self.m.pose.position.y = 1.0
-        self.m.pose.position.z = 1.0
-        self.m.pose.orientation.w = 1
+
+    def set_custom_marker_poses(self):
+        self.set_custom_marker_positions()
+        self.set_custom_marker_orientations()
+        self.pose = Pose(self.point, self.quat)
+
+    def set_custom_marker_positions(self):
+        self.point = Point(1, 1, 1)
+
+    def set_custom_marker_orientations(self):
+        self.quat = Quaternion(0, 0, 0, 1)
 
     def publish_markers(self):
         while not rospy.is_shutdown():
+            self.set_custom_marker_poses()
+            self.m.pose = self.pose
             self.pub.publish(self.m)
             self.rate.sleep()
 

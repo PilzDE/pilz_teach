@@ -63,13 +63,13 @@ class UsabilityTestMarkerPublisher(object):
         self.set_custom_marker_orientations()
         self.poses = list()
         for ii in range(3):
-            self.poses.append(Pose(self.points[ii], self.orientations[ii]))
+            self.poses.append(Pose(self.positions[ii], self.orientations[ii]))
 
     def set_custom_marker_positions(self):
-        self.points = list()
-        self.points.append(Point(1, 1, 0))
-        self.points.append(Point(0, 1, 1))
-        self.points.append(Point(1, 0, 1))
+        self.positions = list()
+        self.positions.append(Point(1, 1, 0))
+        self.positions.append(Point(0, 1, 1))
+        self.positions.append(Point(1, 0, 1))
 
     def set_custom_marker_orientations(self):
         self.orientations = list()
@@ -86,7 +86,7 @@ class UsabilityTestMarkerPublisher(object):
     def get_order_marker(self, ii):
         self.text_marker.header.stamp = rospy.Time.now()
         self.text_marker.id = ii
-        self.text_marker.pose.position = self.points[ii]
+        self.text_marker.pose.position = self.positions[ii]
         self.text_marker.text = str(ii + 1)
         return self.text_marker
 

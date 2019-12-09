@@ -16,6 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import rospy
+import math
 from visualization_msgs.msg import Marker
 from geometry_msgs.msg import Pose, Point, Quaternion
 
@@ -54,8 +55,6 @@ class UsabilityTestMarkerPublisher(object):
         self.order_marker.color.g = 1.0
         self.order_marker.color.b = 1.0
         self.order_marker.color.a = 1.0
-        self.order_marker.scale.x = .5
-        self.order_marker.scale.y = 0.5
         self.order_marker.scale.z = 0.2
 
     def set_custom_marker_poses(self):
@@ -73,9 +72,9 @@ class UsabilityTestMarkerPublisher(object):
 
     def set_custom_marker_orientations(self):
         self.orientations = list()
-        self.orientations.append(Quaternion(0, 1, 0, 1))
-        self.orientations.append(Quaternion(0, 1, 1, 1))
-        self.orientations.append(Quaternion(0, 1, 0, 1))
+        self.orientations.append(Quaternion(0, 1, 0, 0))
+        self.orientations.append(Quaternion(0, math.sqrt(.5), math.sqrt(.5), 0))
+        self.orientations.append(Quaternion(0, 1, 0, 0))
 
     def get_arrow(self, ii):
         self.arrow.header.stamp = rospy.Time.now()

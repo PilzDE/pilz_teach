@@ -99,10 +99,15 @@ class UsabilityTestMarkerPublisher(object):
 if __name__ == '__main__':
     publisher = UsabilityTestMarkerPublisher()
 
-    user_input = raw_input("Start test? (y)")
+    user_input = raw_input("Start test 1? (y/n): ")
 
     if user_input == 'y':
         try:
             publisher.publish_markers()
         except rospy.ROSInterruptException:
             pass
+    
+    user_input = raw_input("Start test 2? (y/n): ")
+
+    if user_input == 'y':
+        pass

@@ -72,9 +72,9 @@ class UsabilityTestMarkerPublisher(object):
 
     def set_custom_marker_orientations(self):
         self.orientations = list()
-        self.orientations.append(Quaternion(0, 1, 0, 0))
-        self.orientations.append(Quaternion(0, math.sqrt(.5), math.sqrt(.5), 0))
-        self.orientations.append(Quaternion(0, 1, 0, 0))
+        self.orientations.append(Quaternion(0, math.sqrt(.5), 0, math.sqrt(.5)))
+        self.orientations.append(Quaternion(0, math.sqrt(.4), math.sqrt(.4), math.sqrt(.2)))
+        self.orientations.append(Quaternion(0, math.sqrt(.5), 0, math.sqrt(.5)))
 
     def get_arrow(self, ii):
         self.arrow.header.stamp = rospy.Time.now()

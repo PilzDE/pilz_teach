@@ -26,14 +26,15 @@ class UsabilityTestMarkerPublisher(object):
         rospy.init_node('usability_test_markers')
         self.rate = rospy.Rate(1)
 
-        self.setup_generic_marker()
+        self.set_generic_arrow_marker()
+        self.set_custom_text_marker()
         self.set_custom_marker_poses()
 
-    def setup_generic_marker(self):
+    def set_generic_arrow_marker(self):
         self.arrow = Marker()
         self.arrow.action = Marker.ADD
         self.arrow.header.frame_id = '/world'
-        self.arrow.ns = 'usability_test_marker'
+        self.arrow.ns = 'usability_test_arrow'
         self.arrow.type = Marker.ARROW
         self.arrow.color.r = 1.0
         self.arrow.color.g = 1.0
@@ -42,6 +43,20 @@ class UsabilityTestMarkerPublisher(object):
         self.arrow.scale.x = .5
         self.arrow.scale.y = 0.01
         self.arrow.scale.z = 0.01
+
+    def set_custom_text_marker(self):
+        self.text_marker = Marker()
+        self.text_marker.action = Marker.ADD
+        self.text_marker.header.frame_id = '/world'
+        self.text_marker.ns = 'usability_test_order'
+        self.text_marker.type = Marker.TEXT_VIEW_FACING
+        self.text_marker.color.r = 1.0
+        self.text_marker.color.g = 1.0
+        self.text_marker.color.b = 1.0
+        self.text_marker.color.a = 1.0
+        self.text_marker.scale.x = .5
+        self.text_marker.scale.y = 0.5
+        self.text_marker.scale.z = 0.2
 
     def set_custom_marker_poses(self):
         self.set_custom_marker_positions()
@@ -62,16 +77,24 @@ class UsabilityTestMarkerPublisher(object):
         self.orientations.append(Quaternion(0, 1, 0, 1))
         self.orientations.append(Quaternion(1, 0, 0, 1))
 
-    def get_marker(self, ii):
+    def get_arrow(self, ii):
         self.arrow.header.stamp = rospy.Time.now()
         self.arrow.id = ii
         self.arrow.pose = self.poses[ii]
         return self.arrow
 
+    def get_order_marker(self, ii):
+        self.text_marker.header.stamp = rospy.Time.now()
+        self.text_marker.id = ii
+        self.text_marker.pose.position = self.points[ii]
+        self.text_marker.text = str(ii + 1)
+        return self.text_marker
+
     def publish_markers(self):
         while not rospy.is_shutdown():
             for ii in range(3):
-                self.pub.publish(self.get_marker(ii))
+                self.pub.publish(self.get_arrow(ii))
+                self.pub.publish(self.get_order_marker(ii))
             self.rate.sleep()
 
 if __name__ == '__main__':

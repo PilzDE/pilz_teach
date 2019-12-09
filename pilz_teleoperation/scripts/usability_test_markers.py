@@ -30,18 +30,18 @@ class UsabilityTestMarkerPublisher(object):
         self.set_custom_marker_poses()
 
     def setup_generic_marker(self):
-        self.m = Marker()
-        self.m.action = Marker.ADD
-        self.m.header.frame_id = '/world'
-        self.m.ns = 'usability_test_marker'
-        self.m.type = Marker.ARROW
-        self.m.color.r = 1.0
-        self.m.color.g = 1.0
-        self.m.color.b = 1.0
-        self.m.color.a = 1.0
-        self.m.scale.x = .5
-        self.m.scale.y = 0.01
-        self.m.scale.z = 0.01
+        self.arrow = Marker()
+        self.arrow.action = Marker.ADD
+        self.arrow.header.frame_id = '/world'
+        self.arrow.ns = 'usability_test_marker'
+        self.arrow.type = Marker.ARROW
+        self.arrow.color.r = 1.0
+        self.arrow.color.g = 1.0
+        self.arrow.color.b = 1.0
+        self.arrow.color.a = 1.0
+        self.arrow.scale.x = .5
+        self.arrow.scale.y = 0.01
+        self.arrow.scale.z = 0.01
 
     def set_custom_marker_poses(self):
         self.set_custom_marker_positions()
@@ -63,10 +63,10 @@ class UsabilityTestMarkerPublisher(object):
         self.orientations.append(Quaternion(1, 0, 0, 1))
 
     def get_marker(self, ii):
-        self.m.header.stamp = rospy.Time.now()
-        self.m.id = ii
-        self.m.pose = self.poses[ii]
-        return self.m
+        self.arrow.header.stamp = rospy.Time.now()
+        self.arrow.id = ii
+        self.arrow.pose = self.poses[ii]
+        return self.arrow
 
     def publish_markers(self):
         while not rospy.is_shutdown():

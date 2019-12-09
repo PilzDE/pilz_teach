@@ -17,7 +17,7 @@
 
 import rospy
 from visualization_msgs.msg import Marker
-from geometry_msgs.msg import *
+from geometry_msgs.msg import Pose, Point, Quaternion
 
 class UsabilityTestMarkerPublisher(object):
 
@@ -27,6 +27,7 @@ class UsabilityTestMarkerPublisher(object):
         self.rate = rospy.Rate(1)
 
         self.setup_generic_marker()
+        self.set_custom_marker_poses()
 
     def setup_generic_marker(self):
         self.m = Marker()
@@ -42,25 +43,35 @@ class UsabilityTestMarkerPublisher(object):
         self.m.scale.y = 0.01
         self.m.scale.z = 0.01
 
-        self.m.header.stamp = rospy.Time.now()
-        self.m.id = 0
-
     def set_custom_marker_poses(self):
         self.set_custom_marker_positions()
         self.set_custom_marker_orientations()
-        self.pose = Pose(self.point, self.quat)
+        self.poses = list()
+        for ii in range(3):
+            self.poses.append(Pose(self.points[ii], self.orientations[ii]))
 
     def set_custom_marker_positions(self):
-        self.point = Point(1, 1, 1)
+        self.points = list()
+        self.points.append(Point(1, 1, 0))
+        self.points.append(Point(0, 1, 1))
+        self.points.append(Point(1, 0, 1))
 
     def set_custom_marker_orientations(self):
-        self.quat = Quaternion(0, 0, 0, 1)
+        self.orientations = list()
+        self.orientations.append(Quaternion(0, 0, 0, 1))
+        self.orientations.append(Quaternion(0, 1, 0, 1))
+        self.orientations.append(Quaternion(1, 0, 0, 1))
+
+    def get_marker(self, ii):
+        self.m.header.stamp = rospy.Time.now()
+        self.m.id = ii
+        self.m.pose = self.poses[ii]
+        return self.m
 
     def publish_markers(self):
         while not rospy.is_shutdown():
-            self.set_custom_marker_poses()
-            self.m.pose = self.pose
-            self.pub.publish(self.m)
+            for ii in range(3):
+                self.pub.publish(self.get_marker(ii))
             self.rate.sleep()
 
 if __name__ == '__main__':

@@ -18,6 +18,7 @@ import rospy
 import unittest
 
 from geometry_msgs.msg import TwistStamped
+from control_msgs.msg import JointJog
 
 
 class TestKeyTeleoperation(unittest.TestCase):
@@ -34,18 +35,20 @@ class TestKeyTeleoperation(unittest.TestCase):
     def tearDown(self):
         rospy.loginfo("TearDown called...")
 
-    def callback(self):
+    def callback(self, msg):
         self.twist_published = True
 
     def test_startup(self):
         """ Test if driver gets started """
-        subscriber = rospy.Subscriber('/jog_server/delta_jog_cmds', TwistStamped, self.callback)
+        subscriber_twist = rospy.Subscriber('/jog_server/delta_jog_cmds', TwistStamped, self.callback)
+        subscriber_joint = rospy.Subscriber('/jog_server/joint_delta_jog_cmds', JointJog, self.callback)
 
         timeout = rospy.Time().now() + rospy.Duration(secs=10)
         while not rospy.is_shutdown() and not self.twist_published:
             rospy.sleep(0.1)
             self.assertTrue(rospy.Time().now() < timeout, "driver did not publish")
-        subscriber.unregister()
+        subscriber_twist.unregister()
+        subscriber_joint.unregister()
 
 
 if __name__ == '__main__':

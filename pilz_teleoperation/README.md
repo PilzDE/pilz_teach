@@ -32,6 +32,8 @@ Use following Syntax:
     
     See [Curses key names](https://www.gnu.org/software/guile-ncurses/manual/html_node/Getting-characters-from-the-keyboard.html)
     for name of special characters in curses.
+    
+    See [Default Keyboard Configuration](./config/keyboard_binding.yaml) for reference.
 
 - then start the node with the additional argument "_bindings"
 

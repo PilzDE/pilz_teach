@@ -28,14 +28,16 @@ JointJogBindings:
 SettingBindings:
   'KEY_UP': "INCREASE_LINEAR_VELOCITY"
   'KEY_DOWN': "DECREASE_LINEAR_VELOCITY"
+  ' ': "TOGGLE_TARGET_FRAME"
 Description: |-
   - 'q' 'w' 'e' = x+ y+ z+	slow
   - 'a' 's' 'd' = x- y- z-	slow
   - 'Q' 'W' 'E' = x++ y++ z++	fast
   - 'A' 'S' 'D' = x-- y-- z--	fast
-  - 'u' 'i' 'o' = x+ y+ z+	slow
-  - 'j' 'k' 'l' = x- y- z-	slow
-  - 'U' 'I' 'O' = x++ y++ z++	fast
-  - 'J' 'K' 'L' = x-- y-- z--	fast
+  - 'u' 'i' 'o' = rx+ ry+ rz+	slow
+  - 'j' 'k' 'l' = rx- ry- rz-	slow
+  - 'U' 'I' 'O' = rx++ ry++ rz++	fast
+  - 'J' 'K' 'L' = rx-- ry-- rz--	fast
   - 'UP' / 'DOWN' = Linear Speed + / -
   - 'RIGHT' / 'LEFT' = Angular Speed + / -
+  - 'SPACE' = toggle target frame

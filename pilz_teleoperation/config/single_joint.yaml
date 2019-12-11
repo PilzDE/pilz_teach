@@ -37,9 +37,12 @@ SettingBindings:
 Description: |-
   - 'q' 'w' 'e' = x+ y+ z+
   - 'a' 's' 'd' = x- y- z-
+  - 'Q' 'W' 'E' = rx+ ry+ rz+
+  - 'E' 'S' 'D' = rx- ry- rz-
   - 'r' 't' 'z' 'u' 'i' 'o' = [joint1 - joint 6] +
   - 'f' 'g' 'h' 'j' 'k' 'l' = [joint1 - joint 6] -
   - '1' / '2' = Linear Speed + / -
   - 'UP' / 'DOWN' = Linear Speed + / -
   - '4' / '5' = Angular Speed + / -
   - 'RIGHT' / 'LEFT' = Angular Speed + / -
+  - 'SPACE' = toggle target frame

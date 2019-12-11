@@ -3,7 +3,7 @@
 import unittest
 import mock
 from pilz_teleoperation import TeleoperationDriver, TeleoperationWindow
-from pilz_teleoperation.srv import SetTeleopeSettingsRequest
+from pilz_teleoperation.srv import SetTeleopSettingsRequest
 
 
 class TestTeleoperationDriver(unittest.TestCase):
@@ -11,7 +11,7 @@ class TestTeleoperationDriver(unittest.TestCase):
         win_mock = mock.MagicMock()
         driver = TeleoperationDriver(window=win_mock)
         self.assertEquals(win_mock.driver_settings_changed.call_count, 1)
-        driver.set_teleop_settings([SetTeleopeSettingsRequest.TOGGLE_VELOCITY_UP])
+        driver.set_teleop_settings([SetTeleopSettingsRequest.TOGGLE_VELOCITY_UP])
         self.assertEquals(win_mock.driver_settings_changed.call_count, 2)
 
 

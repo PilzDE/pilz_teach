@@ -29,10 +29,18 @@ catkin_install_python(PROGRAMS
 if(CATKIN_ENABLE_TESTING)
   find_package(rostest REQUIRED)
 
+  include_directories(
+    ${catkin_INCLUDE_DIRS}
+  )
+
   file(GLOB integrationtest_files "test/integrationtests/*.test")
   file(GLOB integrationtest_py_files "test/integrationtests/*.py")
   foreach(file ${integrationtest_files})
-    add_rostest(${file})
+    if(ENABLE_COVERAGE_TESTING)
+      add_rostest(${file} ARGS coverage:=TRUE)
+    else()
+      add_rostest(${file})
+    endif()
   endforeach()
 
   foreach(file ${integrationtest_py_files})
@@ -41,7 +49,11 @@ if(CATKIN_ENABLE_TESTING)
 
   file(GLOB modultests_files "test/modultests/tst_*.py")
   foreach(file ${modultests_files})
-    catkin_add_nosetests(${file})
+    if(ENABLE_COVERAGE_TESTING)
+      catkin_add_nosetests(${file} ARGS coverage:=TRUE)
+    else()
+      catkin_add_nosetests(${file})
+    endif()
     roslint_python(${file})
   endforeach()
 

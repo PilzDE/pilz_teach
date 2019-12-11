@@ -23,4 +23,7 @@
   <exec_depend>geometry_msgs</exec_depend>
   <exec_depend>control_msgs</exec_depend>
   <exec_depend>rospy</exec_depend>
+
+  <test_depend>rostest</test_depend>
+  <test_depend>rosunit</test_depend>
 </package>

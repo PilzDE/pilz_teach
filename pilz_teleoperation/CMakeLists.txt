@@ -3,8 +3,8 @@ project(pilz_teleoperation)
 
 find_package(catkin REQUIRED COMPONENTS
   message_generation
-  rospy
   roslint
+  rospy
   std_msgs
 )
 
@@ -101,5 +101,5 @@ if(CATKIN_ENABLE_TESTING)
     add_python_coverage(
       NAME ${PROJECT_NAME}_coverage
     )
-  endif(ENABLE_COVERAGE_TESTING)
+  endif()
 endif()

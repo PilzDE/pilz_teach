@@ -39,7 +39,7 @@ class _TeleoperationTwist(object):
             self.linear.x, self.linear.y, self.linear.z = 0, self.linear.x, self.linear.y
 
     def normalize(self):
-        norm = math.sqrt((self.linear.x)**2 + (self.linear.y)**2 + (self.linear.z)**2)
+        norm = math.sqrt(self.linear.x ** 2 + self.linear.y ** 2 + self.linear.z ** 2)
         if norm > 0:
             self.scale_linear_velocity(1/norm)
 
@@ -78,12 +78,14 @@ class TeleoperationDriver(object):
 
     def __ros_init(self):
         self._hz = rospy.Rate(20)
-        self._sv_settings = rospy.Service("set_teleop_settings", SetTeleopSettings, self.set_teleop_settings)
-        self._sub_twist = rospy.Subscriber("teleop_twist", Twist, self.set_twist_command, queue_size=1)
+        self._sv_settings = \
+            rospy.Service("/%s/set_settings" % rospy.get_name(), SetTeleopSettings, self.set_teleop_settings)
+        self._sub_twist = rospy.Subscriber("/%s/twist" % rospy.get_name(), Twist, self.set_twist_command, queue_size=1)
         self._twist_publisher = rospy.Publisher("/jog_server/delta_jog_cmds", TwistStamped, queue_size=1)
 
     def set_teleop_settings(self, req):
         for command in req.pressed_commands:
+            print(command, SetTeleopSettingsRequest.DECREASE_LINEAR_VELOCITY)
             try:
                 success = self._settings.setting_change_method_bindings[command](self._settings)
                 if success is True:
@@ -98,7 +100,7 @@ class TeleoperationDriver(object):
         self._output_window.driver_settings_changed(self._settings.linear_velocity,
                                                     self._settings.angular_velocity,
                                                     self._settings.frame,
-                                                    self._settings.get_current_plane_string())
+                                                    self._settings.movement_projection_plane)
 
     def set_twist_command(self, twist_):
         self.__last_twist_msg = self.__get_stamped_twist(twist_)

@@ -14,5 +14,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from .teleoperation_driver import TeleoperationDriver
+from .teleoperation_input import TeleoperationInput
 from .curses_key_input import CursesKeyInput
 from .terminal_text_window import TerminalTextWindow

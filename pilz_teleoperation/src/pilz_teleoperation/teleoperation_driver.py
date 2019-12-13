@@ -20,6 +20,7 @@ import pilz_teleoperation.teleoperation_settings as _teleop_settings
 
 from geometry_msgs.msg import Twist, TwistStamped, Vector3
 from control_msgs.msg import JointJog
+from std_msgs.msg import Header
 from pilz_teleoperation.srv import SetTeleopSettings, SetTeleopSettingsResponse, SetTeleopSettingsRequest
 
 
@@ -206,6 +207,8 @@ class TeleoperationDriver(object):
 
     def _send_updated_jog(self):
         js = JointJog()
+        js.header.stamp = rospy.Time.now()
+        js.header.frame_id = self._settings.frame
         if self.__key_input_is_new_enough(self.__last_jog_msg):
             new_jog = _TeleoperationJointJog(joint_jog=self.__last_jog_msg)
             new_jog.choose_joint_to_jog(self._settings.joint)

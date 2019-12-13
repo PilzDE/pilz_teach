@@ -42,8 +42,9 @@ class TeleoperationInput(object):
         self._publish_bindings_to_driver_window()
 
     def __init_driver_connection(self):
-        self.__twist_publisher = rospy.Publisher("/%s/twist" % rospy.get_name(), Twist, queue_size=1)
-        self.__setting_service = rospy.ServiceProxy("/%s/set_settings" % rospy.get_name(), SetTeleopSettings)
+        self.__twist_publisher = rospy.Publisher("%s/twist" % rospy.get_name(), Twist, queue_size=1)
+        self.__joint_publisher = rospy.Publisher("%s/joint_jog" % rospy.get_name(), JointJog, queue_size=1)
+        self.__setting_service = rospy.ServiceProxy("%s/set_settings" % rospy.get_name(), SetTeleopSettings)
 
     @staticmethod
     def __get_default_config_path():

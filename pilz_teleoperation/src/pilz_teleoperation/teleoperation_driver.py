@@ -103,8 +103,10 @@ class TeleoperationDriver(object):
     def __ros_init(self):
         self._hz = rospy.Rate(20)
         self._sv_settings = \
-            rospy.Service("/%s/set_settings" % rospy.get_name(), SetTeleopSettings, self.set_teleop_settings)
-        self._sub_twist = rospy.Subscriber("/%s/twist" % rospy.get_name(), Twist, self.set_twist_command, queue_size=1)
+            rospy.Service("%s/set_settings" % rospy.get_name(), SetTeleopSettings, self.set_teleop_settings)
+        self._sub_twist = rospy.Subscriber("%s/twist" % rospy.get_name(), Twist, self.set_twist_command, queue_size=1)
+        self._sub_joint_jog = \
+            rospy.Subscriber("%s/joint_jog" % rospy.get_name(), JointJog, self.set_joint_jog_command, queue_size=1)
         self._twist_publisher = rospy.Publisher("/jog_server/delta_jog_cmds", TwistStamped, queue_size=1)
         self._jog_publisher = rospy.Publisher("/jog_server/joint_delta_jog_cmds", JointJog, queue_size=1)
 

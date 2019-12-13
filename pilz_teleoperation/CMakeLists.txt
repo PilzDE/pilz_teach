@@ -43,10 +43,6 @@ if(CATKIN_ENABLE_TESTING)
     endif()
   endforeach()
 
-  foreach(file ${integrationtest_py_files})
-    roslint_python(${file})
-  endforeach()
-
   file(GLOB modultests_files "test/modultests/tst_*.py")
   foreach(file ${modultests_files})
     if(ENABLE_COVERAGE_TESTING)
@@ -54,19 +50,20 @@ if(CATKIN_ENABLE_TESTING)
     else()
       catkin_add_nosetests(${file})
     endif()
-    roslint_python(${file})
   endforeach()
 
   file(GLOB python_files "src/${PROJECT_NAME}/*.py")
-  foreach(file ${python_files})
-    roslint_python(${file})
-  endforeach()
+  roslint_python(
+    ${integrationtest_py_files}
+    ${modultests_files}
+    ${python_files}
+  )
 
   roslint_add_test()
 
-  ######################
-  ## Coverage Testing ##
-  ######################
+  #######################
+  ## Coverage Analysis ##
+  #######################
 
   function(ADD_PYTHON_COVERAGE)
     set(options NONE)
@@ -87,7 +84,7 @@ if(CATKIN_ENABLE_TESTING)
       COMMAND python-coverage html --include "*${PROJECT_SOURCE_DIR}*" --omit ${COVERAGE_EXCLUDES}
       WORKING_DIRECTORY $ENV{HOME}/.ros
       DEPENDS _run_tests_${PROJECT_NAME}
-      COMMENT "Processing code coverage counters and generating report. Please find the generated report in $ENV{HOME}/.ros/htmlcov/index.html"
+      COMMENT "Processing code coverage counters and generating report. Find the report in $ENV{HOME}/.ros/htmlcov/index.html"
     )
 
     add_dependencies(_run_tests_${PROJECT_NAME} ${Coverage_NAME}_cleanup)

@@ -45,11 +45,7 @@ if(CATKIN_ENABLE_TESTING)
 
   file(GLOB modultests_files "test/modultests/tst_*.py")
   foreach(file ${modultests_files})
-    if(ENABLE_COVERAGE_TESTING)
-      catkin_add_nosetests(${file} ARGS coverage:=TRUE)
-    else()
-      catkin_add_nosetests(${file})
-    endif()
+    catkin_add_nosetests(${file})
   endforeach()
 
   file(GLOB python_files "src/${PROJECT_NAME}/*.py")

@@ -96,27 +96,27 @@ class _TeleoperationTwist(object):
         else:
             self.angular.z *= ang_vel_scale
 
-    def scale_angular_velocity(self, ang_vel):
+    def scale_angular_velocity(self, ang_vel_scale):
         if self.angular.x == 'max':
             self.angular.x = 1
         elif self.angular.x == '-max':
             self.angular.x = -1
         else:
-            self.angular.x *= ang_vel
+            self.angular.x *= ang_vel_scale
 
         if self.angular.y == 'max':
             self.angular.y = 1
         elif self.angular.y == '-max':
             self.angular.y = -1
         else:
-            self.angular.y *= ang_vel
+            self.angular.y *= ang_vel_scale
 
         if self.angular.z == 'max':
             self.angular.z = 1
         elif self.angular.z == '-max':
             self.angular.z = -1
         else:
-            self.angular.z *= ang_vel
+            self.angular.z *= ang_vel_scale
 
 
 class _TeleoperationJointJog(object):
@@ -127,9 +127,9 @@ class _TeleoperationJointJog(object):
         self.displacements = joint_jog.displacements
         self.velocities = joint_jog.velocities
 
-    def scale_linear_velocity(self, lin_vel):
-        self.velocities = [v * lin_vel for v in self.velocities]
-        self.displacements = [d * lin_vel for d in self.displacements]
+    def scale_velocity(self, vel_scale):
+        self.velocities = [v * vel_scale for v in self.velocities]
+        self.displacements = [d * vel_scale for d in self.displacements]
 
     def choose_joint_to_jog(self, current_joint):
         if len(self.joint_names) == 0:

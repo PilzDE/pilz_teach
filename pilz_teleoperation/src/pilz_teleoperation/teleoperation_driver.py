@@ -96,6 +96,9 @@ class _TeleoperationTwist(object):
         else:
             self.angular.z *= ang_vel_scale
 
+    def scale_angular_velocity(self, ang_vel):
+        pass
+
 
 class _TeleoperationJointJog(object):
     """ Extension of JointJog class to store required math. """

@@ -40,7 +40,7 @@ class _TeleoperationTwist(object):
             self.linear.x, self.linear.y, self.linear.z = 0, self.linear.x, self.linear.y
 
     def normalize(self):
-        norm = math.sqrt((self.linear.x)**2 + (self.linear.y)**2 + (self.linear.z)**2)
+        norm = math.sqrt(self.linear.x ** 2 + self.linear.y ** 2 + self.linear.z ** 2)
         if norm > 0:
             self.scale_linear_velocity(1/norm)
 
@@ -102,9 +102,11 @@ class TeleoperationDriver(object):
 
     def __ros_init(self):
         self._hz = rospy.Rate(20)
-        self._sv_settings = rospy.Service("/teleoperation/set_settings", SetTeleopSettings, self.set_teleop_settings)
-        self._twist_subscriber = rospy.Subscriber("/teleoperation/twist", Twist, self.set_twist_command, queue_size=1)
-        self._joint_subscriber = rospy.Subscriber("/teleoperation/joint_jog", JointJog, self.set_joint_jog_command, queue_size=1)
+        self._sv_settings = \
+            rospy.Service("%s/set_settings" % rospy.get_name(), SetTeleopSettings, self.set_teleop_settings)
+        self._sub_twist = rospy.Subscriber("%s/twist" % rospy.get_name(), Twist, self.set_twist_command, queue_size=1)
+        self._sub_joint_jog = \
+            rospy.Subscriber("%s/joint_jog" % rospy.get_name(), JointJog, self.set_joint_jog_command, queue_size=1)
         self._twist_publisher = rospy.Publisher("/jog_server/delta_jog_cmds", TwistStamped, queue_size=1)
         self._jog_publisher = rospy.Publisher("/jog_server/joint_delta_jog_cmds", JointJog, queue_size=1)
 

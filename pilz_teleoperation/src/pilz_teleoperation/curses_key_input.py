@@ -44,4 +44,3 @@ class CursesKeyInput(TeleoperationInput):
         key_code = self._screen.getch()
         curses.flushinp()
         return key_code
-

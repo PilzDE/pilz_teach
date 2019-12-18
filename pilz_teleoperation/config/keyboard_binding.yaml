@@ -7,32 +7,56 @@ MovementBindings:
   '2': {linear: {y: -1}}
   '1': {linear: {x: -1, y: -1}}
   '4': {linear: {x: -1}}
+  'q': {linear: {x: 1}}
+  'a': {linear: {x: -1}}
+  'w': {linear: {y: 1}}
+  's': {linear: {y: -1}}
+  'e': {linear: {z: 1}}
+  'd': {linear: {z: -1}}
+  'Q': {linear: {x: 'max'}}
+  'A': {linear: {x: '-max'}}
+  'W': {linear: {y: 'max'}}
+  'S': {linear: {y: '-max'}}
+  'E': {linear: {z: 'max'}}
+  'D': {linear: {z: '-max'}}
   'u': {angular: {x: -1}}
   'i': {angular: {y: -1}}
   'o': {angular: {z: -1}}
   'j': {angular: {x: 1}}
   'k': {angular: {y: 1}}
   'l': {angular: {z: 1}}
+  'U': {angular: {x: '-max'}}
+  'I': {angular: {y: '-max'}}
+  'O': {angular: {z: '-max'}}
+  'J': {angular: {x: 'max'}}
+  'K': {angular: {y: 'max'}}
+  'L': {angular: {z: 'max'}}
 JointJogBindings:
   'KEY_RIGHT': {"velocities": [1]}
   'KEY_LEFT': {"velocities": [-1]}
-  'KEY_UP': {"joint_names": ["prbt_joint_2", "prbt_joint_3", "prbt_joint_5"], "velocities": [1, -1, -1]}
-  'KEY_DOWN': {"joint_names": ["prbt_joint_2", "prbt_joint_3", "prbt_joint_5"], "velocities": [-1, 1, 1]}
+  'KEY_UP': {"joint_names": ["prbt_joint_2", "prbt_joint_3", "prbt_joint_5"], "velocities": [.3, -1, -1]}
+  'KEY_DOWN': {"joint_names": ["prbt_joint_2", "prbt_joint_3", "prbt_joint_5"], "velocities": [-0.3, 1, 1]}
 SettingBindings:
   '+': "INCREASE_LINEAR_VELOCITY"
   '-': "DECREASE_LINEAR_VELOCITY"
-  '*': "TOGGLE_PLANE"
-  '/': "TOGGLE_TARGET_FRAME"
-  ',': "TOGGLE_CONTROLLER"
+  '*': "INCREASE_ANGULAR_VELOCITY"
+  '/': "DECREASE_ANGULAR_VELOCITY"
+  ' ': "TOGGLE_TARGET_FRAME"
+  ',': "TOGGLE_PLANE"
   'KEY_PPAGE': "TOGGLE_JOINT_UP"
   'KEY_NPAGE': "TOGGLE_JOINT_DOWN"
 Description: |-
-        - Use numpad numbers to move cartesian!
-        - '+' = increase velocity
-        - '-' = decrease velocity
-        - '*' = Toggle Plane to move on
-        - '/' = Toggle between 'world' and 'tcp' frame
-        - 'Page Down' = Toggle to next joint
-        - 'Page Up' = Toggle to previous joint
-        - "LEFT | RIGHT" to jog toggled joint
-        - "UP | DOWN" to jog joints 2, 3 and 5 simulatnious
+  q | w | e : x+  | y+  | z+      shift : speed button
+  a | s | d : x-  | y-  | z-      space : reference frame
+  u | i | o : rx+ | ry+ | rz+
+  j | k | l : rx- | ry- | rz-
+
+  + | - : increase | decrease linear velocity
+  * | / : increase | decrease angular velocity
+  
+  page down | page up : next | previous joint
+       left |   right : jog selected joint
+         up |    down : haul
+  
+  numpad : move inside the selected plane
+  , : change plane

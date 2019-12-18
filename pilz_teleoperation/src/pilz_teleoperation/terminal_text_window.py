@@ -39,7 +39,7 @@ class TerminalTextWindow(TeleoperationWindow):
         self._write_line(9, "target frame:    %s" % self._infos.frame)
         self._write_line(10, "_______________________________________________________")
         self._write_line(12, "Controller (keyboard):")
-        self._write_line(13, self._input_configuration_text)
+        self._write_line(13, "fuck + " + self._input_configuration_text)
         self._end_page()
 
     def _start_page(self):

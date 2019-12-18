@@ -1,0 +1,43 @@
+MovementBindings:
+  'q': {linear: {x: .2}}
+  'a': {linear: {x: -0.2}}
+  'w': {linear: {y: .2}}
+  's': {linear: {y: -0.2}}
+  'e': {linear: {z: .2}}
+  'd': {linear: {z: -0.2}}
+  'Q': {linear: {x: 1}}
+  'A': {linear: {x: -1}}
+  'W': {linear: {y: 1}}
+  'S': {linear: {y: -1}}
+  'E': {linear: {z: 1}}
+  'D': {linear: {z: -1}}
+  'u': {angular: {x: -0.2}}
+  'i': {angular: {y: -0.2}}
+  'o': {angular: {z: -0.2}}
+  'j': {angular: {x: .2}}
+  'k': {angular: {y: .2}}
+  'l': {angular: {z: .2}}
+  'U': {angular: {x: -1}}
+  'I': {angular: {y: -1}}
+  'O': {angular: {z: -1}}
+  'J': {angular: {x: 1}}
+  'K': {angular: {y: 1}}
+  'L': {angular: {z: 1}}
+JointJogBindings:
+  'z': {"velocities": [1]}
+SettingBindings:
+  'KEY_UP': "INCREASE_LINEAR_VELOCITY"
+  'KEY_DOWN': "DECREASE_LINEAR_VELOCITY"
+  ' ': "TOGGLE_TARGET_FRAME"
+Description: |-
+  - 'q' 'w' 'e' = x+ y+ z+	slow
+  - 'a' 's' 'd' = x- y- z-	slow
+  - 'Q' 'W' 'E' = x++ y++ z++	fast
+  - 'A' 'S' 'D' = x-- y-- z--	fast
+  - 'u' 'i' 'o' = rx+ ry+ rz+	slow
+  - 'j' 'k' 'l' = rx- ry- rz-	slow
+  - 'U' 'I' 'O' = rx++ ry++ rz++	fast
+  - 'J' 'K' 'L' = rx-- ry-- rz--	fast
+  - 'UP' / 'DOWN' = Linear Speed + / -
+  - 'RIGHT' / 'LEFT' = Angular Speed + / -
+  - 'SPACE' = toggle target frame

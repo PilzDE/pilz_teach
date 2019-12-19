@@ -24,43 +24,25 @@ class CursesKeyInput(TeleoperationInput):
         Additional Settings like target frame or velocity scaling are published separately.
     """
 
-    def __init__(self, stdscr, driver):
-        super(CursesKeyInput, self).__init__()
-        with open(rospkg.RosPack().get_path("pilz_teleoperation") + "/config/keyboard_binding.yaml", "r") as file_:
-            self.bindings = yaml.safe_load(file_.read())
-            for k, v in self.bindings["MovementBindings"].items():
-                self.bindings["MovementBindings"][k] = \
-                    message_converter.convert_dictionary_to_ros_message('geometry_msgs/Twist', v)
-        self.__driver = driver
+    def __init__(self, stdscr, *args, **kwargs):
+        super(CursesKeyInput, self).__init__(*args, **kwargs)
         self.__init_curses(stdscr)
-        self.__publish_bindings_to_driver_window()
+
+    @staticmethod
+    def _get_key_symbol(k):
+        try:
+            return ord(k)
+        except TypeError:
+            return getattr(curses, k)
 
     def __init_curses(self, stdscr):
         curses.cbreak()
         self._screen = stdscr
         self._screen.nodelay(True)
 
-    def __publish_bindings_to_driver_window(self):
-        win_conf_pub = rospy.Publisher("teleop_input_config_msg", String, queue_size=1, latch=True)
-        win_conf_pub.publish(self.bindings["Description"])
-
-    def resolve_key_input(self):
-        """ Read currently pressed key and publish it to the driver.
-            Should be called with at least 10 HZ!
-        """
-        key_code = self._read_keyboard_input()
-        if key_code in self.bindings["MovementBindings"]:
-            self.__driver.set_twist_command(self.bindings["MovementBindings"][key_code])
-        elif key_code in self.bindings["SettingBindings"]:
-            new_settings = SetTeleopSettingsRequest(pressed_commands=[self.bindings["SettingBindings"][key_code]])
-            self.__driver.set_teleop_settings(new_settings)
-
     def _read_keyboard_input(self):
         key_code = self._screen.getch()
-        self._clear_input_queue()
+        curses.flushinp()
         return key_code
 
-    def _clear_input_queue(self):
-        while self._screen.getch() != -1:
-            pass
-
+    

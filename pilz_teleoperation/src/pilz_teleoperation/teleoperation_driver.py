@@ -135,6 +135,11 @@ class _TeleoperationJointJog(object):
         if len(self.joint_names) == 0:
             self.joint_names = [current_joint]
 
+    def copy_jog_data(self, js):
+        js.joint_names = self.joint_names
+        js.velocities = self.velocities
+        js.displacements = self.displacements
+
 
 class TeleoperationDriver(object):
     """ Main class of the teleoperation driver.
@@ -234,11 +239,7 @@ class TeleoperationDriver(object):
         if self.__key_input_is_new_enough(self.__last_jog_msg):
             new_jog = _TeleoperationJointJog(joint_jog=self.__last_jog_msg)
             new_jog.choose_joint_to_jog(self._settings.joint)
-            new_jog.scale_linear_velocity(self._settings.linear_velocity)
-            js.joint_names = new_jog.joint_names
-            js.velocities = new_jog.velocities
-            js.displacements = new_jog.displacements
-            js.header.stamp = rospy.Time.now()
+            new_jog.copy_jog_data(js)
         else:
             js.joint_names = _teleop_settings.JOINTS
             js.velocities = [0] * len(_teleop_settings.JOINTS)

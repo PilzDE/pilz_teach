@@ -40,13 +40,13 @@ class TeleoperationInput(object):
             with open(config_path, "r") as file_:
                 bindings = yaml.load(file_.read())
                 for k, v in bindings["MovementBindings"].items():
-                    self.MOVE_BINDINGS[self._get_real_key(k)] = \
+                    self.MOVE_BINDINGS[self._get_key_symbol(k)] = \
                         message_converter.convert_dictionary_to_ros_message('geometry_msgs/Twist', v)
                 for k, v in bindings["JointJogBindings"].items():
                     self.JOINT_BINDINGS[self._get_key_symbol(k)] = \
                         message_converter.convert_dictionary_to_ros_message('control_msgs/JointJog', v)
                 for k, v in bindings["SettingBindings"].items():
-                    self.SETTING_BINDINGS[self._get_real_key(k)] = \
+                    self.SETTING_BINDINGS[self._get_key_symbol(k)] = \
                         getattr(SetTeleopSettingsRequest, v)
                 self.INPUT_DESCRIPTION = bindings["Description"]
         except (KeyError, AttributeError):
@@ -54,7 +54,7 @@ class TeleoperationInput(object):
             raise KeyError("Error in binding-config syntax")
 
     @staticmethod
-    def _get_real_key(k):
+    def _get_key_symbol(k):
         return k
 
     def _publish_bindings_to_driver_window(self):

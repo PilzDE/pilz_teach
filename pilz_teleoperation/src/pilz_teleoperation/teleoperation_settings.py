@@ -52,8 +52,8 @@ def _increase_angular_velocity(settings):
 
 
 def _toggle_target_frame(settings):
-    settings.frame_id = settings.frame_id + 1 % len(FRAMES)
-    settings.frame = FRAMES[settings.frame_id]
+    settings.frame_index = (settings.frame_index + 1) % len(FRAMES)
+    settings.frame = FRAMES[settings.frame_index]
     return True
 
 
@@ -66,28 +66,14 @@ def _toggle_projection_plane(settings):
 
 
 def _toggle_joint_up(settings):
-    settings.joint_index = settings.joint_index + 1 % len(FRAMES)
-    settings.joint = FRAMES[settings.joint_index]
+    settings.joint_index = (settings.joint_index + 1) % len(JOINTS)
+    settings.joint = JOINTS[settings.joint_index]
     return True
 
 
 def _toggle_joint_down(settings):
-    settings.joint_index = settings.joint_index - 1 % len(FRAMES)
-    settings.joint = FRAMES[settings.joint_index]
-    return True
-
-
-def _toggle_velocity_up(settings):
-    settings.velocity_index = (settings.velocity_index + 1) % len(VELOCITIES)
-    settings.linear_velocity = VELOCITIES[settings.velocity_index]
-    settings.angular_velocity = VELOCITIES[settings.velocity_index]
-    return True
-
-
-def _toggle_velocity_down(settings):
-    settings.velocity_index = (settings.velocity_index - 1) % len(VELOCITIES)
-    settings.linear_velocity = VELOCITIES[settings.velocity_index]
-    settings.angular_velocity = VELOCITIES[settings.velocity_index]
+    settings.joint_index = (settings.joint_index - 1) % len(JOINTS)
+    settings.joint = JOINTS[settings.joint_index]
     return True
 
 
@@ -111,8 +97,6 @@ class TeleoperationSettings:
         SetTeleopSettingsRequest.TOGGLE_PLANE: _toggle_projection_plane,
         SetTeleopSettingsRequest.TOGGLE_JOINT_UP: _toggle_joint_up,
         SetTeleopSettingsRequest.TOGGLE_JOINT_DOWN: _toggle_joint_down,
-        SetTeleopSettingsRequest.TOGGLE_VELOCITY_UP: _toggle_velocity_up,
-        SetTeleopSettingsRequest.TOGGLE_VELOCITY_DOWN: _toggle_velocity_down,
         SetTeleopSettingsRequest.TOGGLE_ROTATION_AXIS_UP: _toggle_rotation_axis_up,
         SetTeleopSettingsRequest.TOGGLE_ROTATION_AXIS_DOWN: _toggle_rotation_axis_down
     }

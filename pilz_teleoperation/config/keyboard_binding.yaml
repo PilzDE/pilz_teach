@@ -46,6 +46,7 @@ SettingBindings:
   'KEY_PPAGE': "TOGGLE_JOINT_UP"
   'KEY_NPAGE': "TOGGLE_JOINT_DOWN"
 Description: |-
+  
   q | w | e : x+  | y+  | z+      shift : speed button
   a | s | d : x-  | y-  | z-      space : reference frame
   u | i | o : rx+ | ry+ | rz+

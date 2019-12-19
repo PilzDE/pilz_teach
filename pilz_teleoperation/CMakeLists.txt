@@ -34,65 +34,21 @@ if(CATKIN_ENABLE_TESTING)
   )
 
   file(GLOB integrationtest_files "test/integrationtests/*.test")
-  file(GLOB integrationtest_py_files "test/integrationtests/*.py")
   foreach(file ${integrationtest_files})
     if(ENABLE_COVERAGE_TESTING)
-      add_rostest(${file} ARGS coverage:=TRUE)
+        add_rostest(${file} ARGS coverage:=TRUE)
     else()
-      add_rostest(${file})
+        add_rostest(${file})
     endif()
   endforeach()
 
-  file(GLOB modultests_files "test/modultests/tst_*.py")
-  foreach(file ${modultests_files})
+  file(GLOB unittest_files "test/unittests/tst_*.py")
+  foreach(file ${unittest_files})
     catkin_add_nosetests(${file})
   endforeach()
 
-  file(GLOB python_files "src/${PROJECT_NAME}/*.py")
-  roslint_python(
-    ${integrationtest_py_files}
-    ${modultests_files}
-    ${python_files}
-  )
-
+  # check for pep8 compliance and fail test on error(s)
+  roslint_python( )
   roslint_add_test()
 
-  #######################
-  ## Coverage Analysis ##
-  #######################
-
-  function(ADD_PYTHON_COVERAGE)
-    set(options NONE)
-    set(oneValueArgs NAME)
-    set(multiValueArgs DEPENDENCIES)
-    cmake_parse_arguments(Coverage "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
-
-    add_custom_target(${Coverage_NAME}_cleanup
-      # Cleanup coverage data from previous run
-      COMMAND python-coverage erase
-      WORKING_DIRECTORY $ENV{HOME}/.ros
-      COMMENT "Resetting python code coverage counters to zero."
-    )
-
-    add_custom_target(${Coverage_NAME}
-      COMMAND python-coverage combine
-      COMMAND python-coverage report --include "*${PROJECT_SOURCE_DIR}*" --omit ${COVERAGE_EXCLUDES}
-      COMMAND python-coverage html --include "*${PROJECT_SOURCE_DIR}*" --omit ${COVERAGE_EXCLUDES}
-      WORKING_DIRECTORY $ENV{HOME}/.ros
-      DEPENDS _run_tests_${PROJECT_NAME}
-      COMMENT "Processing code coverage counters and generating report. Find the report in $ENV{HOME}/.ros/htmlcov/index.html"
-    )
-
-    add_dependencies(_run_tests_${PROJECT_NAME} ${Coverage_NAME}_cleanup)
-  endfunction() # SETUP_TARGET_FOR_COVERAGE
-
-  # to run: catkin_make -DENABLE_COVERAGE_TESTING=ON package_name_coverage
-  # Import errors may arise when packages are installed in the non-standard path /usr/lib/python2.7/dist-packages
-  # This problem can be avoided by including the path in the PYTHONPATH environment variable
-  if(ENABLE_COVERAGE_TESTING)
-    set(COVERAGE_EXCLUDES "*/${PROJECT_NAME}/test/*") #comma-sparated list of ignored patterns
-    add_python_coverage(
-      NAME ${PROJECT_NAME}_coverage
-    )
-  endif()
 endif()

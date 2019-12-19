@@ -44,10 +44,27 @@ class _TeleoperationTwist(object):
         if norm > 0:
             self.scale_linear_velocity(1/norm)
 
-    def scale_linear_velocity(self, lin_vel):
-        self.linear.x *= lin_vel
-        self.linear.y *= lin_vel
-        self.linear.z *= lin_vel
+    def scale_linear_velocity(self, vel_scale):
+        if self.linear.x == 'max':
+            self.linear.x = 1
+        elif self.linear.x == '-max':
+            self.linear.x = -1
+        else:
+            self.linear.x *= vel_scale
+
+        if self.linear.y == 'max':
+            self.linear.y = 1
+        elif self.linear.y == '-max':
+            self.linear.y = -1
+        else:
+            self.linear.y *= vel_scale
+
+        if self.linear.z == 'max':
+            self.linear.z = 1
+        elif self.linear.z == '-max':
+            self.linear.z = -1
+        else:
+            self.linear.z *= vel_scale
 
 
 class _TeleoperationJointJog(object):
@@ -162,7 +179,6 @@ class TeleoperationDriver(object):
         if self.__key_input_is_new_enough(self.__last_twist_msg):
             new_twist = _TeleoperationTwist(twist=self.__last_twist_msg.twist)
             new_twist.project_on_plane(self._settings.movement_projection_plane)
-            new_twist.normalize()
             new_twist.scale_linear_velocity(self._settings.linear_velocity)
             ts.twist = new_twist
         self._twist_publisher.publish(ts)

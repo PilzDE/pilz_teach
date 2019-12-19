@@ -66,6 +66,28 @@ class _TeleoperationTwist(object):
         else:
             self.linear.z *= vel_scale
 
+    def scale_angular_velocity(self, ang_vel_scale):
+        if self.angular.x == 'max':
+            self.angular.x = 1
+        elif self.angular.x == '-max':
+            self.angular.x = -1
+        else:
+            self.angular.x *= ang_vel_scale
+
+        if self.angular.y == 'max':
+            self.angular.y = 1
+        elif self.angular.y == '-max':
+            self.angular.y = -1
+        else:
+            self.angular.y *= ang_vel_scale
+
+        if self.angular.z == 'max':
+            self.angular.z = 1
+        elif self.angular.z == '-max':
+            self.angular.z = -1
+        else:
+            self.angular.z *= ang_vel_scale
+
 
 class _TeleoperationJointJog(object):
     """ Extension of JointJog class to store required math. """
@@ -180,6 +202,7 @@ class TeleoperationDriver(object):
             new_twist = _TeleoperationTwist(twist=self.__last_twist_msg.twist)
             new_twist.project_on_plane(self._settings.movement_projection_plane)
             new_twist.scale_linear_velocity(self._settings.linear_velocity)
+            new_twist.scale_angular_velocity(self._settings.angular_velocity)
             ts.twist = new_twist
         self._twist_publisher.publish(ts)
 

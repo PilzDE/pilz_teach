@@ -15,5 +15,6 @@
 
 from .teleoperation_driver import TeleoperationDriver
 from .teleoperation_input import TeleoperationInput
+from .teleoperation_window import TeleoperationWindow
 from .curses_key_input import CursesKeyInput
 from .terminal_text_window import TerminalTextWindow

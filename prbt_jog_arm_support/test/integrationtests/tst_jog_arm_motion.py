@@ -34,6 +34,7 @@ class TestJogArmMotion(unittest.TestCase):
 
     def tearDown(self):
         rospy.loginfo("TearDown called...")
+        self.r.__del__
 
     def test_move(self):
         """ Test,  if the robot moves on sending a twist command message"""

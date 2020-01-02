@@ -24,7 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
   <!-- test node -->
   <test test-name="test_jog_arm_motion" pkg="prbt_jog_arm_support"
-    type="tst_jog_arm_motion.py" time-limit="200"
+    type="tst_jog_arm_motion.py" time-limit="2000"
     launch-prefix="$(arg pythontest_launch_prefix)"/>
 
 </launch>

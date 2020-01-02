@@ -6,6 +6,7 @@ from pilz_teleoperation.srv import SetTeleopSettingsRequest
 
 import ros_pytest
 
+
 class TestTeleoperationDriver():
     @mock.patch('rospy.rostime.get_rostime')
     def test_window_update_after_config_change(self, mocked_rostime):

@@ -41,7 +41,7 @@ class TestJogArmMotion(unittest.TestCase):
         # Wait until jog-arm-server is ready
         # topic: /jog_server/delta_jog_cmds
         publisher = rospy.Publisher('/jog_server/delta_jog_cmds', TwistStamped)
-        while publisher.get_num_connections() < 1:
+        while (publisher.get_num_connections() < 1) and (not rospy.is_shutdown()):
             rospy.sleep(0.1)
         
         # get current robot position

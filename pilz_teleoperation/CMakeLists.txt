@@ -28,23 +28,37 @@ catkin_install_python(PROGRAMS
 
 if(CATKIN_ENABLE_TESTING)
   find_package(rostest REQUIRED)
+  find_package(ros_pytest REQUIRED)
 
   include_directories(
     ${catkin_INCLUDE_DIRS}
   )
 
-  file(GLOB integrationtest_files "test/integrationtests/*.test")
-  foreach(file ${integrationtest_files})
-    if(ENABLE_COVERAGE_TESTING)
-        add_rostest(${file} ARGS coverage:=TRUE)
-    else()
-        add_rostest(${file})
-    endif()
-  endforeach()
+  #file(GLOB integrationtest_files "test/integrationtests/*.test")
+  #foreach(file ${integrationtest_files})
+  #  if(ENABLE_COVERAGE_TESTING)
+  #      add_rostest(${file} ARGS coverage:=TRUE)
+  #  else()
+  #      add_rostest(${file})
+  #  endif()
+  #endforeach()
+
+  #file(GLOB unittest_files "test/unittests/tst_*.py")
+  #foreach(file ${unittest_files})
+  #  if(ENABLE_COVERAGE_TESTING) 
+  #    catkin_add_nosetests(${file} ARGS coverage:=TRUE)#CATKIN_TEST_COVERAGE:=1)
+  #  else()
+  #    catkin_add_nosetests(${file})
+  #  endif()
+  #endforeach()
 
   file(GLOB unittest_files "test/unittests/tst_*.py")
   foreach(file ${unittest_files})
-    catkin_add_nosetests(${file})
+    if(ENABLE_COVERAGE_TESTING) 
+      add_pytests(${file} ARGS coverage:=TRUE)
+    else()
+      add_pytests(${file})
+    endif()
   endforeach()
 
   # check for pep8 compliance and fail test on error(s)

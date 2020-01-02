@@ -5,6 +5,8 @@ import mock
 from pilz_teleoperation import TeleoperationDriver
 from pilz_teleoperation.srv import SetTeleopSettingsRequest
 
+import pytest
+
 
 class TestTeleoperationDriver(unittest.TestCase):
     @mock.patch('rospy.rostime.get_rostime')

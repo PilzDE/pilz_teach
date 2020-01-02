@@ -55,9 +55,10 @@ class TestJogArmMotion(unittest.TestCase):
               
         # wait until current robot position changes
         timeout = rospy.Time().now() + rospy.Duration(10.)
-        while(start_pose == self.r.get_current_pose()):
+        while (start_pose == self.r.get_current_pose()) and (not rospy.is_shutdown()):
             rospy.sleep(0.1)
             self.assertTrue(rospy.Time().now() < timeout, "robot did not move until timeout")
+        publisher.unregister()
 
 
 if __name__ == '__main__':

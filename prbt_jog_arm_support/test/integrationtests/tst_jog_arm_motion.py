@@ -65,4 +65,4 @@ class TestJogArmMotion(unittest.TestCase):
 if __name__ == '__main__':
     import rostest
     rospy.init_node('tst_jog_arm_motion')
-    rostest.rosrun('prbt_jog_arm_suppport', 'tst_jog_arm_motion', TestJogArmMotion)
+    rostest.rosrun('prbt_jog_arm_support', 'tst_jog_arm_motion', TestJogArmMotion)

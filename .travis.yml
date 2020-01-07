@@ -22,7 +22,6 @@ env:
     - TEST=catkin_lint
 
 before_script:
-  - git clone --depth=1 https://github.com/tork-a/fake_joint && touch fake_joint/fake_joint/CATKIN_IGNORE && touch fake_joint/fake_joint_launch/CATKIN_IGNORE ## not yet available as binary package
   - git clone -q --depth=1 https://github.com/ros-planning/moveit_ci.git .moveit_ci
 
 script:

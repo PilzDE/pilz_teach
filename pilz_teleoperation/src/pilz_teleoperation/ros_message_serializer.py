@@ -1,4 +1,3 @@
-from rospy_message_converter import message_converter
 import genpy
 import rospy
 
@@ -12,13 +11,13 @@ class RosMessageSerializer:
     def write_messages_to_file(self, ros_messages, filename):
         """
         Writes a file that can be used with 'import' to restore
-        :param ros_messages: dictionary of messages to be serialized.
-                Key: contains the variable name used for serialization, Value a ROS Message Object
+        :param ros_messages: iterable of messages to be serialized.
+                tuple contains the variable name used for serialization and a ROS message object
         :param filename: target filename, overwritten if existent
         """
         with open(filename, 'w') as f:
             serialized_message = ""
-            for varname, msg in ros_messages.items():
+            for varname, msg in ros_messages:
                 serialized_message += "{} = {}\n".format(varname, self.convert_ros_message_to_python(msg))
             f.write("\n".join("from {} import {}".format(module, typename) for typename, module in self._module_imports.items()))
             f.write("\n\n")
@@ -29,18 +28,15 @@ class RosMessageSerializer:
         Serialize a ROS msg into a String Object that can be used with eval() afterwards
         :rtype: String
         """
-        if isinstance(message, rospy.rostime.Time) or isinstance(message, rospy.rostime.Duration):
-            if type(message).__name__ not in self._module_imports.keys():
-                self._module_imports[type(message).__name__] = type(message).__module__
-            return "{} (secs = {}, nsecs = {})".format(type(message).__name__, message.secs, message.nsecs)
-        if not isinstance(message, genpy.Message):
+        if not isinstance(message, (genpy.Message, rospy.rostime.Time, rospy.rostime.Duration)):
+            # end of recursion
             if isinstance(message, str):
                 return "'{}'".format(message)
             else:
                 return str(message)
 
         field_values = []  # ordered list with string-converted attribute values
-        for field_name, field_type in message_converter._get_message_fields(message):
+        for field_name, field_type in self._get_message_fields(message):
             val = self.convert_ros_message_to_python(getattr(message, field_name), indentation + 2)
             field_values.append((field_name,val))
         
@@ -49,3 +45,9 @@ class RosMessageSerializer:
             self._module_imports[type(message).__name__] = type(message).__module__
 
         return "{}(\n{}\n{})".format(type(message).__name__, result, " " * indentation)
+
+    def _get_message_fields(self, message):
+        if isinstance(message, (rospy.rostime.Time, rospy.rostime.Duration)):
+            return [('secs', int), ('nsecs', int)]
+        else:
+            return zip(message.__slots__, message._slot_types)

@@ -34,13 +34,14 @@ class TestJogArmMotion(unittest.TestCase):
 
     def tearDown(self):
         rospy.loginfo("TearDown called...")
+        self.r.__del__
 
     def test_move(self):
         """ Test,  if the robot moves on sending a twist command message"""
         # Wait until jog-arm-server is ready
         # topic: /jog_server/delta_jog_cmds
         publisher = rospy.Publisher('/jog_server/delta_jog_cmds', TwistStamped)
-        while publisher.get_num_connections() < 1:
+        while (publisher.get_num_connections() < 1) and (not rospy.is_shutdown()):
             rospy.sleep(0.1)
         
         # get current robot position
@@ -55,12 +56,13 @@ class TestJogArmMotion(unittest.TestCase):
               
         # wait until current robot position changes
         timeout = rospy.Time().now() + rospy.Duration(10.)
-        while(start_pose == self.r.get_current_pose()):
+        while (start_pose == self.r.get_current_pose()) and (not rospy.is_shutdown()):
             rospy.sleep(0.1)
             self.assertTrue(rospy.Time().now() < timeout, "robot did not move until timeout")
+        publisher.unregister()
 
 
 if __name__ == '__main__':
     import rostest
     rospy.init_node('tst_jog_arm_motion')
-    rostest.rosrun('pilz_jog_arm_suppport', 'tst_jog_arm_motion', TestJogArmMotion)
+    rostest.rosrun('prbt_jog_arm_support', 'tst_jog_arm_motion', TestJogArmMotion)

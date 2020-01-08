@@ -20,6 +20,7 @@ import math
 from visualization_msgs.msg import Marker
 from geometry_msgs.msg import Pose, Point, Quaternion
 
+
 class UsabilityTestMarkerPublisher(object):
 
     def __init__(self):

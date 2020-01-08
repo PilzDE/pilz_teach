@@ -35,7 +35,7 @@ class TerminalTextWindow(TeleoperationWindow):
                          % (self._infos.linear_velocity, self._infos.angular_velocity))
         self._write_line(7, "moves_on_plane:  %s" % self._infos.movement_projection_plane)
         self._write_line(8, "current_joint:   %s" % self._infos.joint)
-        #self._write_line(7, "rotation_axis:   %s" % (["x", "y", "z"][self._infos.rotation_axis]))
+        # self._write_line(7, "rotation_axis:   %s" % (["x", "y", "z"][self._infos.rotation_axis]))
         self._write_line(9, "target frame:    %s" % self._infos.frame)
         self._write_line(10, "_______________________________________________________")
         self._write_line(12, "Controller (keyboard):")

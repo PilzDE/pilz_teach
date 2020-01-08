@@ -18,12 +18,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 <launch>
   <arg name="coverage" default="false"/>
   <arg name="pythontest_launch_prefix" value="$(eval 'python-coverage run -p' if arg('coverage') else '')"/>
-  
-  <include file="$(find pilz_teleoperation)/launch/key_teleop.launch">
-  </include>
 
   <!-- test node -->
-  <test test-name="test_bare_bones" pkg="pilz_teleoperation"
+  <test test-name="test_message_serialization" pkg="pilz_teleoperation"
     type="unittest_ros_message_serializer.py" time-limit="200"
     launch-prefix="$(arg pythontest_launch_prefix)"/>
 

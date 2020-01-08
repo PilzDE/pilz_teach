@@ -1,5 +1,6 @@
 from rospy_message_converter import message_converter
 import genpy
+import rospy
 
 class RosMessageSerializer:
     """
@@ -28,8 +29,15 @@ class RosMessageSerializer:
         Serialize a ROS msg into a String Object that can be used with eval() afterwards
         :rtype: String
         """
+        if isinstance(message, rospy.rostime.Time) or isinstance(message, rospy.rostime.Duration):
+            if type(message).__name__ not in self._module_imports.keys():
+                self._module_imports[type(message).__name__] = type(message).__module__
+            return "{} (secs = {}, nsecs = {})".format(type(message).__name__, message.secs, message.nsecs)
         if not isinstance(message, genpy.Message):
-            return str(message)
+            if isinstance(message, str):
+                return "'{}'".format(message)
+            else:
+                return str(message)
 
         field_values = []  # ordered list with string-converted attribute values
         for field_name, field_type in message_converter._get_message_fields(message):

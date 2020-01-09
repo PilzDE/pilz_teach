@@ -28,7 +28,7 @@ class TestMessageSerializer(unittest.TestCase):
         serializes a ros msg, read back and compare with original message
         """
         # save Pose
-        RosMessageSerializer().write_messages_to_file([("start_pose_test", self._start_pose)], "/tmp/test_writeback.py")
+        RosMessageSerializer().write_messages_to_file({"start_pose_test": self._start_pose}, "/tmp/test_writeback.py")
 
         # load Pose
         sys.path.append("/tmp")

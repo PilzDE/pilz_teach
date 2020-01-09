@@ -19,6 +19,7 @@ import rospy
 import math
 from visualization_msgs.msg import Marker
 from geometry_msgs.msg import Pose, Point, Quaternion
+from std_msgs.msg import ColorRGBA
 
 
 class UsabilityTestMarkerPublisher(object):
@@ -38,10 +39,7 @@ class UsabilityTestMarkerPublisher(object):
         self.arrow.header.frame_id = '/world'
         self.arrow.ns = 'usability_test_arrow'
         self.arrow.type = Marker.ARROW
-        self.arrow.color.r = 1.0
-        self.arrow.color.g = 1.0
-        self.arrow.color.b = 1.0
-        self.arrow.color.a = 1.0
+        self.arrow.color = ColorRGBA(1, 1, 1, 1)
         self.arrow.scale.x = .5
         self.arrow.scale.y = 0.01
         self.arrow.scale.z = 0.01
@@ -52,10 +50,7 @@ class UsabilityTestMarkerPublisher(object):
         self.order_marker.header.frame_id = '/world'
         self.order_marker.ns = 'usability_test_order'
         self.order_marker.type = Marker.TEXT_VIEW_FACING
-        self.order_marker.color.r = 1.0
-        self.order_marker.color.g = 1.0
-        self.order_marker.color.b = 1.0
-        self.order_marker.color.a = 1.0
+        self.order_marker.color = ColorRGBA(1, 1, 1, 1)
         self.order_marker.scale.z = 0.2
 
     def set_custom_marker_poses(self):
@@ -66,16 +61,17 @@ class UsabilityTestMarkerPublisher(object):
             self.poses.append(Pose(self.positions[ii], self.orientations[ii]))
 
     def set_custom_marker_positions(self):
-        self.positions = list()
-        self.positions.append(Point(-.4, -.2, .3))
-        self.positions.append(Point(-.4, .4, .2))
-        self.positions.append(Point(0, .4, .5))
-        self.positions.append(Point(-.4, -.2, .3))
-        self.positions.append(Point(-.4, .2, .3))
-        self.positions.append(Point(-.1, -.3, .1))
-        self.positions.append(Point(-.4, -.2, .3))
-        self.positions.append(Point(-.4, -.2, .3))
-        self.positions.append(Point(-.4, -.2, .3))
+        self.positions = [
+            Point(-.4, -.2, .3),
+            Point(-.4, .4, .2),
+            Point(0, .4, .5),
+            Point(-.4, -.2, .3),
+            Point(-.4, .2, .3) ,
+            Point(-.1, -.3, .1),
+            Point(-.4, -.2, .3),
+            Point(-.4, -.2, .3),
+            Point(-.4, -.2, .3),
+        ]
 
     def set_custom_marker_orientations(self):
         self.orientations = list()

@@ -75,48 +75,17 @@ class _TeleoperationTwist(object):
             self.linear.z *= vel_scale
 
     def scale_angular_velocity(self, ang_vel_scale):
-        if self.angular.x == 'max':
-            self.angular.x = 1
-        elif self.angular.x == '-max':
-            self.angular.x = -1
-        else:
-            self.angular.x *= ang_vel_scale
+        self.angular.x = self.scale_angular_value(self.angular.x, ang_vel_scale)
+        self.angular.y = self.scale_angular_value(self.angular.y, ang_vel_scale)
+        self.angular.z = self.scale_angular_value(self.angular.z, ang_vel_scale)
 
-        if self.angular.y == 'max':
-            self.angular.y = 1
-        elif self.angular.y == '-max':
-            self.angular.y = -1
+    def scale_angular_value(self, value, scale):
+        if value == 'max':
+            return 1
+        elif value == '-max':
+            return -1
         else:
-            self.angular.y *= ang_vel_scale
-
-        if self.angular.z == 'max':
-            self.angular.z = 1
-        elif self.angular.z == '-max':
-            self.angular.z = -1
-        else:
-            self.angular.z *= ang_vel_scale
-
-    def scale_angular_velocity(self, ang_vel_scale):
-        if self.angular.x == 'max':
-            self.angular.x = 1
-        elif self.angular.x == '-max':
-            self.angular.x = -1
-        else:
-            self.angular.x *= ang_vel_scale
-
-        if self.angular.y == 'max':
-            self.angular.y = 1
-        elif self.angular.y == '-max':
-            self.angular.y = -1
-        else:
-            self.angular.y *= ang_vel_scale
-
-        if self.angular.z == 'max':
-            self.angular.z = 1
-        elif self.angular.z == '-max':
-            self.angular.z = -1
-        else:
-            self.angular.z *= ang_vel_scale
+            return value * scale
 
 
 class _TeleoperationJointJog(object):

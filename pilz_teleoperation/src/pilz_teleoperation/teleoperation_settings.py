@@ -19,7 +19,6 @@ from pilz_teleoperation.srv import SetTeleopSettingsRequest
 
 FRAMES = ["world", "prbt_tcp"]
 JOINTS = ["prbt_joint_1", "prbt_joint_2", "prbt_joint_3", "prbt_joint_4", "prbt_joint_5", "prbt_joint_6"]
-VELOCITIES = [.2, .6, 1]
 
 VELOCITY_SPEEDUP_LINEAR = 0.01
 VELOCITY_SPEEDUP_ANGULAR = 0.01
@@ -108,6 +107,5 @@ class TeleoperationSettings:
         self.frame_index = 0
         self.joint = JOINTS[0]
         self.joint_index = 0
-        self.velocity_index = 0
         self.rotation_axis = 0
         self.movement_projection_plane = SetTeleopSettingsRequest.USE_XY_PLANE

@@ -19,15 +19,22 @@ To use alternative keyboad bindings for the key_teleop driver do:
 Use following Syntax:
     ```
     MovementBindings:
-      'w': <Twist> (e.g. {"linear": {"x": 1.0}})
+      'w': <Twist> (e.g. '8': {linear: {x: 1.0, y: -1.0}})
+    JointJogBindings:
+      '<CURSES_KEY_NAME>': <Twist> (e.g. 'KEY_RIGHT': {"velocities": [1]})
     SettingBindings:
-      '+': <SettingName> (e.g. INCREASE_LINEAR_VELOCITY)
+      '+': <SettingName> (e.g. '+': "INCREASE_LINEAR_VELOCITY")
     Description: |-
       Displayed Text e.g. to show current bindings
       With the '|-' the text can contain multiple rows
     ```
     
     See [SetTeleopSettings.srv](./srv/SetTeleopSettings.srv) for available settings
+
+    See [Curses key names](https://www.gnu.org/software/guile-ncurses/manual/html_node/Getting-characters-from-the-keyboard.html)
+    for name of special characters in curses.
+
+    See [Default Keyboard Configuration](./config/keyboard_binding.yaml) for reference.
 
 - then start the node with the additional argument "_bindings"
 

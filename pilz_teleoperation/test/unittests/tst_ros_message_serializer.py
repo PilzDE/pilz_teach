@@ -1,46 +1,56 @@
 #!/usr/bin/env python
-import unittest
 import os
 import sys
 import rospy
+import pytest
 from pilz_teleoperation.ros_message_serializer import RosMessageSerializer
 
 
 PKG = 'pilz_teleoperation'
 
+def single_pose():
+    from geometry_msgs.msg import PoseStamped
 
-# A sample python unit test
-class TestMessageSerializer(unittest.TestCase):
+    start_pose = PoseStamped()
+    start_pose.header.stamp = rospy.Time(12345, 6789)
+    start_pose.header.frame_id = "world"
+    start_pose.pose.position.x = 7
+    start_pose.pose.orientation.w = -1.0
+    return {"start_pose_test": start_pose}
 
-    def __init__(self, *args, **kwargs):
-        super(TestMessageSerializer, self).__init__(*args, **kwargs)
+def multiple_poses():
+    result = single_pose()
+    from geometry_msgs.msg import PoseStamped
 
-        from geometry_msgs.msg import PoseStamped
+    goal_pose = PoseStamped()
+    goal_pose.header.stamp = rospy.Time(123, 89)
+    goal_pose.header.frame_id = "tcp"
+    goal_pose.pose.position.y = 0.8
+    goal_pose.pose.orientation.y = 1.0
 
-        self._start_pose = PoseStamped()
-        self._start_pose.header.stamp = rospy.Time(12345, 6789)
-        self._start_pose.header.frame_id = "world"
-        self._start_pose.pose.position.x = 7
-        self._start_pose.pose.orientation.w = -1.0
-
-    def test_writeback(self):
-        """
-        serializes a ros msg, read back and compare with original message
-        """
-        # save Pose
-        RosMessageSerializer().write_messages_to_file({"start_pose_test": self._start_pose}, "/tmp/test_writeback.py")
-
-        # load Pose
-        sys.path.append("/tmp")
-        from test_writeback import start_pose_test
-        os.remove("/tmp/test_writeback.py")
-
-        # compare Pose
-        self.assertEquals(self._start_pose, start_pose_test,
-                          "Could not read back pose %s %s" % (self._start_pose, start_pose_test))
+    result["goal_pose"] = goal_pose
+    return result
 
 
-if __name__ == '__main__':
-    import rosunit
+@pytest.mark.parametrize("test_input", [{"hallo": "welt"},
+                                        {},
+                                        {"e": None},
+                                        single_pose(),
+                                        multiple_poses()])
+def test_writeback(test_input, tmpdir):
+    """
+    serializes a ros msg, read back and compare with original message
+    """
 
-    rosunit.unitrun(PKG, 'test_message_serialization', TestMessageSerializer)
+    # save Pose with unique name
+    module_name = str(tmpdir).split('/')[-1]
+    RosMessageSerializer().write_messages_to_file(test_input, str(tmpdir.join(module_name + ".py")))
+
+    # load module
+    sys.path.insert(0, str(tmpdir))
+    readback = __import__(module_name)
+    sys.path.pop(0)
+
+    # compare all variables
+    for k in test_input.keys():
+        assert test_input[k] == getattr(readback,k), "Could not read back pose"

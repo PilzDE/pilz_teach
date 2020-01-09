@@ -53,33 +53,16 @@ class _TeleoperationTwist(object):
             self.scale_linear_velocity(1/norm)
 
     def scale_linear_velocity(self, vel_scale):
-        if self.linear.x == 'max':
-            self.linear.x = 1
-        elif self.linear.x == '-max':
-            self.linear.x = -1
-        else:
-            self.linear.x *= vel_scale
-
-        if self.linear.y == 'max':
-            self.linear.y = 1
-        elif self.linear.y == '-max':
-            self.linear.y = -1
-        else:
-            self.linear.y *= vel_scale
-
-        if self.linear.z == 'max':
-            self.linear.z = 1
-        elif self.linear.z == '-max':
-            self.linear.z = -1
-        else:
-            self.linear.z *= vel_scale
+        self.linear.x = self.scale_value(self.linear.x, vel_scale)
+        self.linear.y = self.scale_value(self.linear.y, vel_scale)
+        self.linear.z = self.scale_value(self.linear.z, vel_scale)
 
     def scale_angular_velocity(self, ang_vel_scale):
-        self.angular.x = self.scale_angular_value(self.angular.x, ang_vel_scale)
-        self.angular.y = self.scale_angular_value(self.angular.y, ang_vel_scale)
-        self.angular.z = self.scale_angular_value(self.angular.z, ang_vel_scale)
+        self.angular.x = self.scale_value(self.angular.x, ang_vel_scale)
+        self.angular.y = self.scale_value(self.angular.y, ang_vel_scale)
+        self.angular.z = self.scale_value(self.angular.z, ang_vel_scale)
 
-    def scale_angular_value(self, value, scale):
+    def scale_value(self, value, scale):
         if value == 'max':
             return 1
         elif value == '-max':

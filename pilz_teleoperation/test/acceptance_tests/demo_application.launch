@@ -15,5 +15,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
 <launch>
-    <node name="key_input" pkg="pilz_teleoperation" type="key_teleop.py" output="screen" />
+    <include file="$(find pilz_teleoperation)/launch/key_teleop.launch" />
+    <node name="test_markers" pkg="pilz_teleoperation" type="demo_application_markers.py" output="screen" />
 </launch>

@@ -73,7 +73,7 @@ class TeleoperationInput(object):
         return k
 
     def _publish_bindings_to_driver_window(self):
-        win_conf_pub = rospy.Publisher("/%s/display_input_config" % rospy.get_name(), String, queue_size=1, latch=True)
+        win_conf_pub = rospy.Publisher("%s/display_input_config" % rospy.get_name(), String, queue_size=1, latch=True)
         win_conf_pub.publish(self.INPUT_DESCRIPTION)
 
     def resolve_key_input(self):

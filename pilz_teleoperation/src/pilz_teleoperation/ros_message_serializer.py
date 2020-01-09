@@ -1,10 +1,12 @@
 import genpy
 import rospy
 
+
 class RosMessageSerializer:
     """
     Serialization and De-Serialization of ROS messages for convenient file printing
     """
+
     def __init__(self):
         self._module_imports = {}
 
@@ -19,7 +21,8 @@ class RosMessageSerializer:
             serialized_message = ""
             for varname, msg in ros_messages:
                 serialized_message += "{} = {}\n".format(varname, self.convert_ros_message_to_python(msg))
-            f.write("\n".join("from {} import {}".format(module, typename) for typename, module in self._module_imports.items()))
+            f.write("\n".join(
+                "from {} import {}".format(module, typename) for typename, module in self._module_imports.items()))
             f.write("\n\n")
             f.write(serialized_message)
 
@@ -38,9 +41,9 @@ class RosMessageSerializer:
         field_values = []  # ordered list with string-converted attribute values
         for field_name, field_type in self._get_message_fields(message):
             val = self.convert_ros_message_to_python(getattr(message, field_name), indentation + 2)
-            field_values.append((field_name,val))
-        
-        result = ',\n'.join(" "*(indentation+2) + '{} = {}'.format(key,value) for key, value in field_values)
+            field_values.append((field_name, val))
+
+        result = ',\n'.join(" " * (indentation + 2) + '{} = {}'.format(key, value) for key, value in field_values)
         if type(message).__name__ not in self._module_imports.keys():
             self._module_imports[type(message).__name__] = type(message).__module__
 

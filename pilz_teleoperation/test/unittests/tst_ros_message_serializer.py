@@ -1,12 +1,15 @@
 #!/usr/bin/env python
-PKG='pilz_teleoperation'
 import unittest
 import os
 import sys
 import rospy
 from pilz_teleoperation.ros_message_serializer import RosMessageSerializer
 
-## A sample python unit test
+
+PKG = 'pilz_teleoperation'
+
+
+# A sample python unit test
 class TestMessageSerializer(unittest.TestCase):
 
     def __init__(self, *args, **kwargs):
@@ -18,7 +21,7 @@ class TestMessageSerializer(unittest.TestCase):
         self._start_pose.header.stamp = rospy.Time(12345, 6789)
         self._start_pose.header.frame_id = "world"
         self._start_pose.pose.position.x = 7
-        self._start_pose.pose.orientation.w=-1.0
+        self._start_pose.pose.orientation.w = -1.0
 
     def test_writeback(self):
         """
@@ -33,9 +36,11 @@ class TestMessageSerializer(unittest.TestCase):
         os.remove("/tmp/test_writeback.py")
 
         # compare Pose
-        self.assertEquals(self._start_pose, start_pose_test, \
-                "Could not read back pose %s %s" % (self._start_pose, start_pose_test))
+        self.assertEquals(self._start_pose, start_pose_test,
+                          "Could not read back pose %s %s" % (self._start_pose, start_pose_test))
+
 
 if __name__ == '__main__':
     import rosunit
+
     rosunit.unitrun(PKG, 'test_message_serialization', TestMessageSerializer)

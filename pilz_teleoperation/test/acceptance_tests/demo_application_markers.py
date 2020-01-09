@@ -66,7 +66,7 @@ class UsabilityTestMarkerPublisher(object):
             Point(-.4, .4, .2),
             Point(0, .4, .5),
             Point(-.4, -.2, .3),
-            Point(-.4, .2, .3) ,
+            Point(-.4, .2, .3),
             Point(-.1, -.3, .1),
             Point(-.4, -.2, .3),
             Point(-.4, -.2, .3),

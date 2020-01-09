@@ -188,6 +188,7 @@ class TeleoperationDriver(object):
         js = JointJog()
         js.header.stamp = rospy.Time.now()
         js.header.frame_id = self._settings.frame
+        js.scale_velocity(self.settings.angular_velocity)
         if self.__key_input_is_new_enough(self.__last_jog_msg):
             new_jog = _TeleoperationJointJog(joint_jog=self.__last_jog_msg)
             new_jog.choose_joint_to_jog(self._settings.joint)

@@ -29,7 +29,7 @@ Use following Syntax:
       With the '|-' the text can contain multiple rows
     ```
     
-    See [SetTeleopSettings.srv](./srv/SetTeleopSettings.srv) for available settings
+    See [SetTeleopSettings.srv](./srv/SetTeleopSettings.srv) for available settings.
 
     See [Curses key names](https://www.gnu.org/software/guile-ncurses/manual/html_node/Getting-characters-from-the-keyboard.html)
     for name of special characters in curses.

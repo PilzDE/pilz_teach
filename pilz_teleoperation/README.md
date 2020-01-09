@@ -21,7 +21,7 @@ Use following Syntax:
     MovementBindings:
       'w': <Twist> (e.g. '8': {linear: {x: 1.0, y: -1.0}})
     JointJogBindings:
-      '<CURSES_KEY_NAME>': <Twist> (e.g. 'KEY_RIGHT': {"velocities": [1]})
+      '<CURSES_KEY_NAME>': {"joint_names": ["prbt_joint_2", "prbt_joint_3"], "velocities": [.3, -.1]}
     SettingBindings:
       '+': <SettingName> (e.g. '+': "INCREASE_LINEAR_VELOCITY")
     Description: |-

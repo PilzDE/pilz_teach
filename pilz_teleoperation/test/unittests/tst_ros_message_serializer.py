@@ -8,6 +8,7 @@ from pilz_teleoperation.ros_message_serializer import RosMessageSerializer
 
 PKG = 'pilz_teleoperation'
 
+
 def single_pose():
     from geometry_msgs.msg import PoseStamped
 
@@ -17,6 +18,7 @@ def single_pose():
     start_pose.pose.position.x = 7
     start_pose.pose.orientation.w = -1.0
     return {"start_pose_test": start_pose}
+
 
 def multiple_poses():
     result = single_pose()
@@ -53,4 +55,4 @@ def test_writeback(test_input, tmpdir):
 
     # compare all variables
     for k in test_input.keys():
-        assert test_input[k] == getattr(readback,k), "Could not read back pose"
+        assert test_input[k] == getattr(readback, k), "Could not read back pose"

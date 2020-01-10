@@ -1,0 +1,25 @@
+##########################
+# Teleoperation Settings #
+##########################
+
+# toggle options
+frames_to_toggle: ["world", "prbt_tcp"]
+default_frame_index: 0
+joints_to_toggle: ["prbt_joint_1", "prbt_joint_2", "prbt_joint_3", "prbt_joint_4", "prbt_joint_5", "prbt_joint_6"]
+default_joint_index: 0
+planes_to_toggle: ["XY", "XZ", "YZ"]
+default_plane_index: 0
+axes_to_toggle: ["x", "y", "z"]
+default_axis_index: 0
+
+# Velocities
+default_linear_velocity: 0.2
+min_linear_velocity: 0.1
+max_linear_velocity: 1.0
+stepsize_linear_velocity: 0.01
+
+default_angular_velocity: 0.2
+min_angular_velocity: 0.1
+max_angular_velocity: 1.0
+stepsize_angular_velocity: 0.01
+

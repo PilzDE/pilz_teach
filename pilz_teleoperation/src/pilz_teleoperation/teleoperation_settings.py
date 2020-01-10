@@ -86,7 +86,7 @@ def _toggle_rotation_axis_down(settings):
     return True
 
 
-class TeleoperationSettings:
+class TeleoperationSettings(object):
     setting_change_method_bindings = {
         SetTeleopSettingsRequest.DECREASE_ANGULAR_VELOCITY: _decrease_angular_velocity,
         SetTeleopSettingsRequest.INCREASE_ANGULAR_VELOCITY: _increase_angular_velocity,

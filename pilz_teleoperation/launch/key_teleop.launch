@@ -15,5 +15,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
 <launch>
-    <node name="key_input" pkg="pilz_teleoperation" type="key_teleop.py" output="screen" />
+    <arg name="teleop_config" default="$(find pilz_teleoperation)/config/teleoperation_settings.yaml" />
+    <node name="key_input" pkg="pilz_teleoperation" type="key_teleop.py" output="screen">
+        <rosparam command="load" file="$(arg teleop_config)" />
+    </node>
 </launch>

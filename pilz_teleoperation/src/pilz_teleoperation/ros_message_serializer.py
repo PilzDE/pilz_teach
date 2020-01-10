@@ -1,5 +1,6 @@
 import genpy
 import rospy
+from collections import OrderedDict
 
 
 class RosMessageSerializer(object):
@@ -36,22 +37,26 @@ class RosMessageSerializer(object):
             # end of recursion
             return self._message_to_string(message)
 
-        field_values = []  # ordered list with string-converted attribute values
-        for field_name, field_type in self._get_message_fields(message):
-            val = self.convert_ros_message_to_python(getattr(message, field_name), indentation + 2)
-            field_values.append((field_name, val))
-
-        result = ',\n'.join(" " * (indentation + 2) + '{} = {}'.format(key, value) for key, value in field_values)
+        field_values = self._message_to_stringdict(message, indentation)
+        result = ',\n'.join(
+            '{}{} = {}'.format(" " * (indentation + 2), key, value) for key, value in field_values.items())
         self._module_imports[type(message).__name__] = type(message).__module__
 
         return "{}(\n{}\n{})".format(type(message).__name__, result, " " * indentation)
 
+    def _message_to_stringdict(self, message, indentation):
+        field_values = OrderedDict()
+        for field_name in self._get_message_fields(message):
+            # recursion:
+            field_values[field_name] = self.convert_ros_message_to_python(getattr(message, field_name), indentation + 2)
+        return field_values
+
     @staticmethod
     def _get_message_fields(message):
         if isinstance(message, (rospy.rostime.Time, rospy.rostime.Duration)):
-            return [('secs', int), ('nsecs', int)]
+            return ['secs', 'nsecs']
         else:
-            return zip(message.__slots__, message._slot_types)
+            return message.__slots__
 
     @staticmethod
     def _message_to_string(message):

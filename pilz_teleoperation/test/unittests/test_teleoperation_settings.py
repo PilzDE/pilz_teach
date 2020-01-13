@@ -25,7 +25,7 @@ from pilz_teleoperation.srv import SetTeleopSettingsRequest
 PKG = 'pilz_teleoperation'
 
 _package_dir = "/".join(os.path.dirname(os.path.realpath(__file__)).split("/")[:-2])
-with open(_package_dir+ "/config/teleoperation_settings.yaml") as f:
+with open(_package_dir + "/config/teleoperation_settings.yaml") as f:
     setting_defaults = yaml.load(f.read())
 
 

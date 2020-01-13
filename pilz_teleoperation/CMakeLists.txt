@@ -43,7 +43,7 @@ if(CATKIN_ENABLE_TESTING)
     endif()
   endforeach()
 
-  file(GLOB unittest_files "test/unittests/tst_*.py")
+  file(GLOB unittest_files "test/unittests/test_*.py")
   foreach(file ${unittest_files})
     add_pytests(${file})
   endforeach()

@@ -6,6 +6,7 @@ find_package(catkin REQUIRED COMPONENTS
   roslint
   rospy
   std_msgs
+  visualization_msgs
 )
 
 add_service_files(

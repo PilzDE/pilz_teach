@@ -67,21 +67,25 @@ class TeleoperationSettings(object):
     def _decrease_angular_velocity(self):
         self.angular_velocity = self._change_speed(current_speed=self.angular_velocity,
                                                    step=-self._step_size_angular_velocity,
-                                                   min_=self._min_angular_velocity)
+                                                   min_=self._min_angular_velocity,
+                                                   max_=self._max_angular_velocity)
 
     def _increase_angular_velocity(self):
         self.angular_velocity = self._change_speed(current_speed=self.angular_velocity,
                                                    step=self._step_size_angular_velocity,
+                                                   min_=self._min_angular_velocity,
                                                    max_=self._max_angular_velocity)
 
     def _decrease_linear_velocity(self):
         self.linear_velocity = self._change_speed(current_speed=self.linear_velocity,
                                                   step=-self._step_size_linear_velocity,
+                                                  min_=self._min_linear_velocity,
                                                   max_=self._max_linear_velocity)
 
     def _increase_linear_velocity(self):
         self.linear_velocity = self._change_speed(current_speed=self.linear_velocity,
                                                   step=self._step_size_linear_velocity,
+                                                  min_=self._min_linear_velocity,
                                                   max_=self._max_linear_velocity)
 
     def _toggle_target_frame_up(self):

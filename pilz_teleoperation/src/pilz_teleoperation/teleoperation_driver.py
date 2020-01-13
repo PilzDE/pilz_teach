@@ -20,7 +20,7 @@ import pilz_teleoperation.teleoperation_settings as _teleop_settings
 
 from geometry_msgs.msg import Twist, TwistStamped, Vector3
 from control_msgs.msg import JointJog
-from pilz_teleoperation.srv import SetTeleopSettings, SetTeleopSettingsResponse, SetTeleopSettingsRequest
+from pilz_teleoperation.srv import SetTeleopSettings, SetTeleopSettingsResponse
 
 
 class _TeleoperationTwist(object):
@@ -37,7 +37,7 @@ class _TeleoperationTwist(object):
     def project_on_plane(self, projection_plane):
         first = self.linear.x
         second = self.linear.y
-        self.linear.x, self.linear.y, self.linear.z = 0, 0, 0
+        self.linear.x, self.linear.y = 0, 0
         setattr(self.linear, projection_plane[0], first)
         setattr(self.linear, projection_plane[1], second)
 
@@ -133,12 +133,9 @@ class TeleoperationDriver(object):
     def set_teleop_settings(self, req):
         for command in req.pressed_commands:
             try:
-                success = self._settings.setting_change_method_bindings[command]()
-                if success is True:
-                    self._update_settings_display()
-                    return SetTeleopSettingsResponse(success=success)
-                else:
-                    return SetTeleopSettingsResponse(success=False, error_msg=success)
+                self._settings.setting_change_method_bindings[command]()
+                self._update_settings_display()
+                return SetTeleopSettingsResponse(success=True)
             except KeyError:
                 return SetTeleopSettingsResponse(success=False, error_msg="Unsupported Command")
 

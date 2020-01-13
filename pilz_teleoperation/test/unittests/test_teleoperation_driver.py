@@ -7,7 +7,8 @@ from pilz_teleoperation.srv import SetTeleopSettingsRequest
 
 class TestTeleoperationDriver():
     @mock.patch('rospy.rostime.get_rostime')
-    def test_window_update_after_config_change(self, mocked_rostime):
+    @mock.patch('rospy.get_param')
+    def test_window_update_after_config_change(self, mocked_get_param, mocked_rostime):
         mocked_rostime.return_value = 0
         win_mock = mock.MagicMock()
         driver = TeleoperationDriver(window=win_mock)

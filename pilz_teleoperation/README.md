@@ -14,7 +14,7 @@ To move the robot around, use keypad numbers as described in the on-screen instr
 
 ### Alternative Key Bindings
 
-To use alternative keyboad bindings for the key_teleop driver do:
+To use alternative keyboard bindings for the key_teleop driver do:
 - create a separate config yaml file.
 Use following Syntax:
     ```

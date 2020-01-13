@@ -19,7 +19,7 @@ import os
 import sys
 import rospy
 import pytest
-from pilz_teleoperation.ros_message_serializer import RosMessageSerializer
+from pilz_teleoperation import RosMessageSerializer
 
 
 PKG = 'pilz_teleoperation'

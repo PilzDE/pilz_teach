@@ -24,8 +24,8 @@ from pilz_teleoperation.srv import SetTeleopSettingsRequest
 
 PKG = 'pilz_teleoperation'
 
-with open("/".join(os.path.dirname(os.path.realpath(__file__)).split("/")[:-2])
-          + "/config/teleoperation_settings.yaml") as f:
+_package_dir = "/".join(os.path.dirname(os.path.realpath(__file__)).split("/")[:-2])
+with open(_package_dir+ "/config/teleoperation_settings.yaml") as f:
     setting_defaults = yaml.load(f.read())
 
 
@@ -77,5 +77,3 @@ def test_change_setting(setting_key, start, operation, expected, monkeypatch):
     teleop_settings.setting_change_method_bindings[operation]()
     # assert change
     assert getattr(teleop_settings, setting_key) == pytest.approx(expected)
-
-

@@ -24,7 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
   <!-- test node -->
   <test test-name="test_key_teleoperation" pkg="pilz_teleoperation"
-    type="tst_key_teleop.py" time-limit="200"
+    type="test_key_teleop.py" time-limit="200"
     launch-prefix="$(arg pythontest_launch_prefix)"/>
 
 </launch>

@@ -15,8 +15,6 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import os
-import sys
 import rospy
 import pytest
 from pilz_teleoperation import RosMessageSerializer
@@ -55,19 +53,18 @@ def multiple_poses():
                                         {"e": None},
                                         single_pose(),
                                         multiple_poses()])
-def test_writeback(test_input, tmpdir):
+def test_writeback(test_input, tmpdir, monkeypatch):
     """
     serializes a ros msg, read back and compare with original message
     """
 
     # save Pose with unique name
-    module_name = str(tmpdir).split('/')[-1]
+    module_name = tmpdir.basename
     RosMessageSerializer().write_messages_to_file(test_input, str(tmpdir.join(module_name + ".py")))
 
     # load module
-    sys.path.insert(0, str(tmpdir))
+    monkeypatch.syspath_prepend(str(tmpdir))
     readback = __import__(module_name)
-    sys.path.pop(0)
 
     # compare all variables
     for k in test_input.keys():

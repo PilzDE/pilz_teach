@@ -1,7 +1,7 @@
 #!/bin/bash
 
 python-coverage erase
-for f in tst_*.py
+for f in test_*.py
 do
   python-coverage run -a -m pytest $f
 done

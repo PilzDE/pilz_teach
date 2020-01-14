@@ -29,7 +29,7 @@ To test jogging, execute the following steps:
 
 1. Startup the prbt: 
 ```
-roslaunch prbt_jog_arm_support prbt_jog_arm_sim.launch
+roslaunch prbt_jog_arm_support prbt_jog_arm.launch
 ```
 
 2. Send test command:
@@ -44,6 +44,20 @@ twist:
     x: 0.0
     y: 0.0
     z: 0.0"
+```
+
+
+## Real robot
+1. See [prbt_support_package](https://github.com/PilzDE/pilz_robots) for setup instructions but instead of their launch file only use the following.
+
+2. Bringup the PRBT:
+```
+roslaunch prbt_jog_arm_support prbt_jog_arm.launch sim:=False
+```
+
+3. Teleoperation
+```
+rosrun pilz_teleoperation key_teleop.py
 ```
 
 

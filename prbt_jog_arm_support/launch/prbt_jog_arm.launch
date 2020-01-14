@@ -37,10 +37,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   <!-- Run the "real robot" interface nodes -->
   <group unless="$(arg sim)">
     <include file="$(find prbt_support)/launch/robot.launch">
+      <arg name="sto" value="None" /> <!-- TODO -->
       <arg name="load_robot_description" value="false" />
       <arg name="gripper" value="$(arg gripper)" />
+      <arg name="canopen_config" value="$(find prbt_jog_arm_support)/config/vl_driver.yaml" />
+      <arg name="spawn_controllers" value="manipulator_joint_state_controller manipulator_vl_group_controller" />
     </include>
-
+    <rosparam ns="prbt" command="load" file="$(find prbt_jog_arm_support)/config/vl_controller.yaml" />
   </group>
 
   <!-- Run the robot simulator and action interface nodes -->
@@ -62,5 +65,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     <include file="$(find prbt_hardware_support)/launch/fake_safety_interface.launch" />
   </group>
 
-  <include file="$(find prbt_jog_arm_support)/launch/jog_server.launch" />
+  <!-- moveit jog-arm package converts twist commands into driver position / velocity command stream -->
+  <node name="jog_server" pkg="moveit_jog_arm" type="jog_server" output="screen" >
+    <param name="parameter_ns" type="string" value="jog_server" />
+    <rosparam command="load" if="$(arg sim)" file="$(find prbt_jog_arm_support)/config/prbt_jog_settings_position.yaml" />
+    <rosparam command="load" unless="$(arg sim)" file="$(find prbt_jog_arm_support)/config/prbt_jog_settings_velocity.yaml" />
+  </node>
 </launch>

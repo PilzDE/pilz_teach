@@ -13,10 +13,19 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from .teleoperation_driver import TeleoperationDriver
-from .teleoperation_input import TeleoperationInput
-from .teleoperation_window import TeleoperationWindow
-from .curses_key_input import CursesKeyInput
-from .terminal_text_window import TerminalTextWindow
-from .ros_message_serializer import RosMessageSerializer
-from .pose_tf_publisher import PoseBroadcaster
+import rospy
+import sys
+print(sys.path)
+import tf2_ros
+from geometry_msgs.msg import PoseStamped
+
+
+class PoseBroadcaster(object):
+    def __init__(self):
+        self.tf_broadcaster = tf2_ros.TransformBroadcaster()
+
+    def publish_poses_from_file(self, python_file):
+        for k, v in python_file.__dict__.items():
+            if isinstance(v, PoseStamped):
+                v.header.stamp = rospy.Time.now()
+                self.tf_broadcaster.sendTransform(v)

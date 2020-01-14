@@ -1,4 +1,6 @@
-# Copyright (c) 2019 Pilz GmbH & Co. KG
+#!/usr/bin/env python
+
+# Copyright (c) 2020 Pilz GmbH & Co. KG
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published by
@@ -13,10 +15,20 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from .teleoperation_driver import TeleoperationDriver
-from .teleoperation_input import TeleoperationInput
-from .teleoperation_window import TeleoperationWindow
-from .curses_key_input import CursesKeyInput
-from .terminal_text_window import TerminalTextWindow
-from .ros_message_serializer import RosMessageSerializer
-from .pose_tf_publisher import PoseBroadcaster
+import os
+import rospy
+import pytest
+from pilz_teleoperation import PoseBroadcaster
+
+
+PKG = 'pilz_teleoperation'
+
+
+def test_visualisation(monkeypatch):
+    """
+    serializes a ros msg, read back and compare with original message
+    """
+    _test_data_dir = os.path.dirname(os.path.realpath(__file__)) + "/test_data"
+    monkeypatch.syspath_prepend(_test_data_dir)
+    pose_list_file = __import__("pose_file")
+    PoseBroadcaster().publish_poses_from_file(pose_list_file)

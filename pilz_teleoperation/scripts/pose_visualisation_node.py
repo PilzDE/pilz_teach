@@ -1,3 +1,5 @@
+#! /usr/bin/env python
+
 # Copyright (c) 2019 Pilz GmbH & Co. KG
 #
 # This program is free software: you can redistribute it and/or modify
@@ -13,10 +15,10 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from .teleoperation_driver import TeleoperationDriver
-from .teleoperation_input import TeleoperationInput
-from .teleoperation_window import TeleoperationWindow
-from .curses_key_input import CursesKeyInput
-from .terminal_text_window import TerminalTextWindow
-from .ros_message_serializer import RosMessageSerializer
-from .pose_tf_publisher import PoseBroadcaster
+import rospy
+
+if __name__ == '__main__':
+    try:
+        pass
+    except rospy.ROSInterruptException:
+        pass

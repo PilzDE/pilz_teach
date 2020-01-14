@@ -32,4 +32,3 @@ if __name__ == '__main__':
 
     serializer = RosMessageSerializer()
     serializer.write_messages_to_file({'pick_pose': current_pose}, 'points.py')
-

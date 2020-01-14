@@ -61,7 +61,7 @@ class TeleoperationSettings(object):
         self._plane_index = rospy.get_param("~default_plane_index")
         self._axis_index = rospy.get_param("~default_axis_index")
 
-    def get_joints(self):
+    def get_joints(self):  # pragma: no cover
         return tuple(self._joints_to_toggle)
 
     def _decrease_angular_velocity(self):

@@ -15,8 +15,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
 <launch>
-    <arg name="teleop_config" default="$(find pilz_teleoperation)/config/teleoperation_settings.yaml" />
+    <arg name="bindings_file" default="$(find pilz_teleoperation)/config/keyboard_binding.yaml" />
+    <arg name="teleop_config_file" default="$(find pilz_teleoperation)/config/teleoperation_settings.yaml" />
     <node name="key_input" pkg="pilz_teleoperation" type="key_teleop.py" output="screen">
-        <rosparam command="load" file="$(arg teleop_config)" />
+        <rosparam command="load" file="$(arg teleop_config_file)" />
+        <param name="bindings" value="$(arg bindings_file)" />
     </node>
 </launch>

@@ -14,18 +14,23 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import rospy
-import sys
-print(sys.path)
 import tf2_ros
-from geometry_msgs.msg import PoseStamped
+from geometry_msgs.msg import TransformStamped
 
 
 class PoseBroadcaster(object):
     def __init__(self):
         self.tf_broadcaster = tf2_ros.TransformBroadcaster()
+        rospy.sleep(.5)
 
     def publish_poses_from_file(self, python_file):
         for k, v in python_file.__dict__.items():
-            if isinstance(v, PoseStamped):
-                v.header.stamp = rospy.Time.now()
-                self.tf_broadcaster.sendTransform(v)
+            try:
+                t = TransformStamped(child_frame_id=k)
+                t.transform.translation = v.pose.position
+                t.transform.rotation = v.pose.orientation
+                t.header.frame_id = v.header.frame_id
+                t.header.stamp = rospy.Time.now()
+                self.tf_broadcaster.sendTransform(t)
+            except AttributeError:
+                pass

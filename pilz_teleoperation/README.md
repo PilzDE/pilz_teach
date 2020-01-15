@@ -112,3 +112,9 @@ pick_pose = Pose(
     )
 )
 ```
+
+### Display Stored Points
+Stored points can be displayed as TFs. To do this run rviz activate the tf module and then run:
+```
+rosrun pilz_teleoperation pose_visualisation_node.py _file_path:="/path/to/file.py"
+```

@@ -9,10 +9,21 @@ Bring up your robot and jog-arm-server; see for example [prbt_jog_arm package](.
 To start the keyboard frontend:
 
 ```
-rosrun pilz_teleoperation key_teleop.py
+roslaunch pilz_teleoperation key_teleop.launch
 ```
 
-To move the robot around, use keypad numbers as described in the on-screen instructions.
+To move the robot around, use keyboard keys as described in the on-screen instructions.
+
+### Teleoperation Settings
+The teleoperation driver is parametrized by the 
+[teleoperation_settings.yaml](../pilz_teleoperation/config/teleoperation_settings.yaml).
+These Settings define the joints and target frames to toggle, as well as the velocities to which 
+the driver will clamp the speed to. The `teleop_config_file` parameter can be modified to load a custom
+settings file.
+
+```
+roslaunch pilt_teleoperation key_teleop.launch teleop_config_file:="/path/to/your/config.yaml"
+```
 
 ### Alternative Key Bindings
 
@@ -41,7 +52,7 @@ Use following Syntax:
 - then start the node with the additional argument "_bindings"
 
     ```
-    rosrun pilz_teleoperation key_teleop.py _bindings:="/path/to/your/yaml.yaml"
+    roslaunch pilz_teleoperation key_teleop.launch bindings_file:="/path/to/your/binding.yaml"
     ```
 
 ### Future Plans

@@ -20,8 +20,7 @@ import pilz_teleoperation.teleoperation_settings as _teleop_settings
 
 from geometry_msgs.msg import Twist, TwistStamped, Vector3
 from control_msgs.msg import JointJog
-from std_msgs.msg import Header
-from pilz_teleoperation.srv import SetTeleopSettings, SetTeleopSettingsResponse, SetTeleopSettingsRequest
+from pilz_teleoperation.srv import SetTeleopSettings, SetTeleopSettingsResponse
 
 
 class _TeleoperationTwist(object):
@@ -36,16 +35,16 @@ class _TeleoperationTwist(object):
                                twist.angular.z)
 
     def project_on_plane(self, projection_plane):
-        if projection_plane == SetTeleopSettingsRequest.USE_XZ_PLANE:
-            self.linear.y, self.linear.z = 0, self.linear.y
-        elif projection_plane == SetTeleopSettingsRequest.USE_YZ_PLANE:
-            self.linear.x, self.linear.y, self.linear.z = 0, self.linear.x, self.linear.y
+        first = self.linear.x
+        second = self.linear.y
+        self.linear.x, self.linear.y = 0, 0
+        setattr(self.linear, projection_plane[0], first)
+        setattr(self.linear, projection_plane[1], second)
 
     def change_rotation_axis(self, axis):
-        if axis == 1:
-            self.angular.x, self.angular.y = 0, self.angular.x
-        elif axis == 2:
-            self.angular.x, self.angular.z = 0, self.angular.x
+        value = self.angular.x
+        self.angular.x = 0
+        setattr(self.angular, axis, value)
 
     def normalize(self):
         norm = math.sqrt(self.linear.x ** 2 + self.linear.y ** 2 + self.linear.z ** 2)
@@ -133,14 +132,10 @@ class TeleoperationDriver(object):
 
     def set_teleop_settings(self, req):
         for command in req.pressed_commands:
-            print(command, SetTeleopSettingsRequest.DECREASE_LINEAR_VELOCITY)
             try:
-                success = self._settings.setting_change_method_bindings[command](self._settings)
-                if success is True:
-                    self._update_settings_display()
-                    return SetTeleopSettingsResponse(success=success)
-                else:
-                    return SetTeleopSettingsResponse(success=False, error_msg=success)
+                self._settings.setting_change_method_bindings[command]()
+                self._update_settings_display()
+                return SetTeleopSettingsResponse(success=True)
             except KeyError:
                 return SetTeleopSettingsResponse(success=False, error_msg="Unsupported Command")
 
@@ -156,7 +151,7 @@ class TeleoperationDriver(object):
 
     def __get_stamped_twist(self, twist_=None):
         st = TwistStamped(twist=twist_)
-        st.header.frame_id = self._settings.frame
+        st.header.frame_id = self._settings.toggled_target_frame
         st.header.stamp = rospy.Time.now()
         return st
 
@@ -178,7 +173,7 @@ class TeleoperationDriver(object):
         ts = self.__get_stamped_twist()
         if self.__key_input_is_new_enough(self.__last_twist_msg):
             new_twist = _TeleoperationTwist(twist=self.__last_twist_msg.twist)
-            new_twist.project_on_plane(self._settings.movement_projection_plane)
+            new_twist.project_on_plane(self._settings.toggled_plane)
             new_twist.scale_linear_velocity(self._settings.linear_velocity)
             new_twist.scale_angular_velocity(self._settings.angular_velocity)
             ts.twist = new_twist
@@ -187,16 +182,16 @@ class TeleoperationDriver(object):
     def _send_updated_jog(self):
         js = JointJog()
         js.header.stamp = rospy.Time.now()
-        js.header.frame_id = self._settings.frame
+        js.header.frame_id = self._settings.toggled_target_frame
         if self.__key_input_is_new_enough(self.__last_jog_msg):
             new_jog = _TeleoperationJointJog(joint_jog=self.__last_jog_msg)
-            new_jog.choose_joint_to_jog(self._settings.joint)
+            new_jog.choose_joint_to_jog(self._settings.toggled_joint)
             new_jog.copy_jog_data(js)
-            new_jog.scale_velocity(self.settings.angular_velocity)
+            new_jog.scale_velocity(self._settings.angular_velocity)
         else:
-            js.joint_names = _teleop_settings.JOINTS
-            js.velocities = [0] * len(_teleop_settings.JOINTS)
-            js.displacements = [0] * len(_teleop_settings.JOINTS)
+            js.joint_names = self._settings.get_joints()
+            js.velocities = [0] * len(self._settings.get_joints())
+            js.displacements = [0] * len(self._settings.get_joints())
         self._jog_publisher.publish(js)
 
     @staticmethod

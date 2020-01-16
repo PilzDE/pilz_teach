@@ -113,7 +113,7 @@ class TeleoperationDriver(object):
         :type window: TeleoperationWindow
         """
         super(TeleoperationDriver, self).__init__()
-        rospy.on_shutdown(self._stop_robot)
+        rospy.on_shutdown(self.stop_robot)
         self._output_window = window
         self._settings = _teleop_settings.TeleoperationSettings()
         self.__last_twist_msg = TwistStamped()
@@ -156,6 +156,15 @@ class TeleoperationDriver(object):
         st.header.stamp = rospy.Time.now()
         return st
 
+    def __get_joint_jog(self):
+        js = JointJog()
+        js.header.stamp = rospy.Time.now()
+        js.header.frame_id = self._settings.toggled_target_frame
+        js.joint_names = self._settings.get_joints()
+        js.velocities = [0] * len(self._settings.get_joints())
+        js.displacements = [0] * len(self._settings.get_joints())
+        return js
+
     def update_loop(self):
         while not rospy.is_shutdown():
             self.send_updated_twist()
@@ -179,25 +188,22 @@ class TeleoperationDriver(object):
             new_twist.scale_angular_velocity(self._settings.angular_velocity)
             ts.twist = new_twist
         else:
-            self._stop_robot()
+            self.stop_robot()
         self._twist_publisher.publish(ts)
 
-    def _stop_robot(self):
+    def stop_robot(self):
         self._twist_publisher.publish(self.__get_stamped_twist())
+        self._jog_publisher.publish(self.__get_joint_jog())
 
     def _send_updated_jog(self):
-        js = JointJog()
-        js.header.stamp = rospy.Time.now()
-        js.header.frame_id = self._settings.toggled_target_frame
+        js = self.__get_joint_jog()
         if self.__key_input_is_new_enough(self.__last_jog_msg):
             new_jog = _TeleoperationJointJog(joint_jog=self.__last_jog_msg)
             new_jog.choose_joint_to_jog(self._settings.toggled_joint)
             new_jog.copy_jog_data(js)
             new_jog.scale_velocity(self._settings.angular_velocity)
         else:
-            js.joint_names = self._settings.get_joints()
-            js.velocities = [0] * len(self._settings.get_joints())
-            js.displacements = [0] * len(self._settings.get_joints())
+            self.stop_robot()
         self._jog_publisher.publish(js)
 
     @staticmethod

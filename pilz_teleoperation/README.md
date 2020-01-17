@@ -114,7 +114,10 @@ pick_pose = Pose(
 ```
 
 ### Display Stored Points
-Stored points can be displayed as TFs. To do this run rviz activate the tf module and then run:
+Stored points can be published as target_frames. 
+Those target frames can for example be displayed by Rviz.
+
+To publish the points run:
 ```
 rosrun pilz_teleoperation pose_visualisation_node.py _file_path:="/path/to/file.py"
 ```

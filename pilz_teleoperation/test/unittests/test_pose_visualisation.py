@@ -18,6 +18,8 @@
 import rospy
 import tf2_ros
 import rospkg
+import pytest
+from contextlib import contextmanager
 from pilz_teleoperation import PoseBroadcaster
 from mock import Mock, call
 from geometry_msgs.msg import TransformStamped, Transform, Pose, Point, Quaternion
@@ -27,26 +29,50 @@ from std_msgs.msg import Header
 PKG = 'pilz_teleoperation'
 
 
-def test_visualisation(monkeypatch):
+@contextmanager
+def does_not_raise():
+    yield
+
+
+pose_file_output = (call(TransformStamped(header=Header(stamp=rospy.Time(100, 101), frame_id="tcp"),
+                                          child_frame_id="goal_pose",
+                                          transform=Transform(translation=Point(y=.8),
+                                                              rotation=Quaternion(y=1.0)))),
+                    call(TransformStamped(header=Header(stamp=rospy.Time(100, 101), frame_id="world"),
+                                          child_frame_id="start_pose_test",
+                                          transform=Transform(translation=Point(x=7.0),
+                                                              rotation=Quaternion(w=-1.0)))),
+                    )
+unknown_type_err = (call("start_pose_test is of unknown type: <class 'geometry_msgs.msg._Pose.Pose'>"),)
+
+
+@pytest.mark.parametrize("test_file,            expected_exception,         tf_calls,           ros_errs",
+                         [("pose_file.py",      does_not_raise(),           pose_file_output,   ()),
+                          ("missing_type_file", pytest.raises(NameError),   (),                 ()),
+                          ("unknown_type",      does_not_raise(),           (),                 unknown_type_err),
+                          ("yaml_file",         pytest.raises(ImportError), (),                 ()),
+                          ("non_existent_file", pytest.raises(ImportError), (),                 ())])
+def test_visualisation(test_file, expected_exception, tf_calls, ros_errs, monkeypatch):
     """
     serializes a ros msg, read back and compare with original message
     """
-    monkeypatch.setattr(rospy.Time, "now", Mock(return_value=rospy.Time(100, 101)))
+    __mock_dependencys(monkeypatch)
+    publish_mock, err_mock = __mock_side_effects(monkeypatch)
+    _test_data_dir = rospkg.RosPack().get_path("pilz_teleoperation") + "/test/unittests/test_data/"
 
+    with expected_exception:
+        PoseBroadcaster().publish_poses_from_file(_test_data_dir + test_file)
+        publish_mock.assert_has_calls(tf_calls)
+        err_mock.assert_has_calls(ros_errs)
+
+
+def __mock_side_effects(monkeypatch):
     publish_mock = Mock()
     monkeypatch.setattr(tf2_ros.TransformBroadcaster, "sendTransform", publish_mock)
+    err_mock = Mock()
+    monkeypatch.setattr(rospy, "logerr", err_mock)
+    return publish_mock, err_mock
 
-    _test_data_dir = rospkg.RosPack().get_path("pilz_teleoperation") + "/test/unittests/test_data"
-    monkeypatch.syspath_prepend(_test_data_dir)
-    pose_list_file = __import__("pose_file")
-    PoseBroadcaster().publish_poses_from_file(pose_list_file)
 
-    publish_mock.assert_has_calls((call(TransformStamped(header=Header(stamp=rospy.Time(100, 101), frame_id="tcp"),
-                                                         child_frame_id="goal_pose",
-                                                         transform=Transform(translation=Point(y=.8),
-                                                                             rotation=Quaternion(y=1.0)))),
-                                   call(TransformStamped(header=Header(stamp=rospy.Time(100, 101), frame_id="world"),
-                                                         child_frame_id="start_pose_test",
-                                                         transform=Transform(translation=Point(x=7.0),
-                                                                             rotation=Quaternion(w=-1.0)))),
-                                   ))
+def __mock_dependencys(monkeypatch):
+    monkeypatch.setattr(rospy.Time, "now", Mock(return_value=rospy.Time(100, 101)))

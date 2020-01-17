@@ -42,6 +42,7 @@ if __name__ == '__main__':
         pb = PoseBroadcaster()
         while not rospy.is_shutdown():
             pb.publish_poses_from_file(pose_list)
+            rospy.Rate(1).sleep()
     except KeyError:
         rospy.logerr("path invalid!")
     except rospy.ROSInterruptException:

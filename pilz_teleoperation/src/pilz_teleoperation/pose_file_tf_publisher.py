@@ -19,7 +19,7 @@ import tf2_ros
 from geometry_msgs.msg import TransformStamped
 
 
-class PoseBroadcaster(object):
+class PoseFileTFPublisher(object):
     def __init__(self):
         self.tf_broadcaster = tf2_ros.TransformBroadcaster()
         self.__pose_list_file = None
@@ -67,4 +67,3 @@ class PoseBroadcaster(object):
         while not rospy.is_shutdown():
             self._publish_poses()
             rospy.Rate(rate).sleep()
-

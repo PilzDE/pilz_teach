@@ -16,14 +16,14 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import rospy
-from pilz_teleoperation import PoseBroadcaster
+from pilz_teleoperation import PoseFileTFPublisher
 
 
 if __name__ == '__main__':
     rospy.init_node("pose_visualisation")
     try:
         file_path = rospy.get_param("~file_path")
-        pb = PoseBroadcaster()
+        pb = PoseFileTFPublisher()
         pb.publish_poses_from_file_loop(file_path)
     except ImportError:
         rospy.logerr("path invalid!")

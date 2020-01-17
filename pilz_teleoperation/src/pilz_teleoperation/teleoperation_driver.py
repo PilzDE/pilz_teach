@@ -115,13 +115,10 @@ class TeleoperationDriver(object):
         super(TeleoperationDriver, self).__init__()
         self._output_window = window
         self._settings = _teleop_settings.TeleoperationSettings()
-        self.__last_twist_msg = TwistStamped()
-        self.__last_jog_msg = JointJog()
         self.__ros_init()
         self._update_settings_display()
 
     def __ros_init(self):
-        self._hz = rospy.Rate(20)
         self._sv_settings = \
             rospy.Service("%s/set_settings" % rospy.get_name(), SetTeleopSettings, self.set_teleop_settings)
         self._sub_twist = rospy.Subscriber("%s/twist" % rospy.get_name(), Twist, self.set_twist_command, queue_size=1)
@@ -143,11 +140,10 @@ class TeleoperationDriver(object):
         self._output_window.driver_settings_changed(copy.copy(self._settings))
 
     def set_twist_command(self, twist_):
-        self.__last_twist_msg = self.__get_stamped_twist(twist_)
+        self._send_updated_twist(self.__get_stamped_twist(twist_))
 
     def set_joint_jog_command(self, joint_jog_):
-        joint_jog_.header.stamp = rospy.Time.now()
-        self.__last_jog_msg = joint_jog_
+        self._send_updated_jog(joint_jog_)
 
     def __get_stamped_twist(self, twist_=None):
         st = TwistStamped(twist=twist_)
@@ -155,46 +151,21 @@ class TeleoperationDriver(object):
         st.header.stamp = rospy.Time.now()
         return st
 
-    def update_loop(self):
-        while not rospy.is_shutdown():
-            self.send_updated_twist()
-            self._hz.sleep()
-
-    def send_updated_twist(self):
-        """ Publishes the current twist to the jog arm driver.
-            Has to be called at least with 10 HZ!
-        """
-        if self.__last_twist_msg.header.stamp > self.__last_jog_msg.header.stamp:
-            self._send_updated_twist()
-        else:
-            self._send_updated_jog()
-
-    def _send_updated_twist(self):
-        ts = self.__get_stamped_twist()
-        if self.__key_input_is_new_enough(self.__last_twist_msg):
-            new_twist = _TeleoperationTwist(twist=self.__last_twist_msg.twist)
-            new_twist.project_on_plane(self._settings.toggled_plane)
-            new_twist.scale_linear_velocity(self._settings.linear_velocity)
-            new_twist.scale_angular_velocity(self._settings.angular_velocity)
-            ts.twist = new_twist
+    def _send_updated_twist(self, ts):
+        new_twist = _TeleoperationTwist(twist=ts.twist)
+        new_twist.project_on_plane(self._settings.toggled_plane)
+        new_twist.scale_linear_velocity(self._settings.linear_velocity)
+        new_twist.scale_angular_velocity(self._settings.angular_velocity)
+        ts.twist = new_twist
         self._twist_publisher.publish(ts)
 
-    def _send_updated_jog(self):
-        js = JointJog()
+    def _send_updated_jog(self, js):
         js.header.stamp = rospy.Time.now()
         js.header.frame_id = self._settings.toggled_target_frame
-        if self.__key_input_is_new_enough(self.__last_jog_msg):
-            new_jog = _TeleoperationJointJog(joint_jog=self.__last_jog_msg)
-            new_jog.choose_joint_to_jog(self._settings.toggled_joint)
-            new_jog.copy_jog_data(js)
-            new_jog.scale_velocity(self._settings.angular_velocity)
-        else:
-            js.joint_names = self._settings.get_joints()
-            js.velocities = [0] * len(self._settings.get_joints())
-            js.displacements = [0] * len(self._settings.get_joints())
-        self._jog_publisher.publish(js)
 
-    @staticmethod
-    def __key_input_is_new_enough(msg):
-        return rospy.Time.now() - msg.header.stamp \
-               < rospy.Duration.from_sec(TeleoperationDriver.KEY_INPUT_TIMEOUT)
+        new_jog = _TeleoperationJointJog(joint_jog=js)
+        new_jog.choose_joint_to_jog(self._settings.toggled_joint)
+        new_jog.copy_jog_data(js)
+        new_jog.scale_velocity(self._settings.angular_velocity)
+
+        self._jog_publisher.publish(js)

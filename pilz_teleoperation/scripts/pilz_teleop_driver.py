@@ -25,7 +25,9 @@ def main(stdscr):
     :param stdscr: terminal screen
     """
     win = pilz_teleoperation.TerminalTextWindow(stdscr)
-    pilz_teleoperation.TeleoperationDriver(win).update_loop()
+    pilz_teleoperation.TeleoperationDriver(win)
+    while not rospy.is_shutdown():
+        rospy.sleep(1)
 
 
 if __name__ == '__main__':

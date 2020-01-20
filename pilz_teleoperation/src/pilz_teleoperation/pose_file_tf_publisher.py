@@ -25,13 +25,13 @@ class PoseFileTFPublisher(object):
         self.__pose_list_file = None
 
     def _import_pose_list(self, file_path):
-        file_name_without_extension, path_to_file = self._get_path_and_name(file_path)
+        file_name_without_extension, path_to_file = self._get_name_and_path(file_path)
         sys.path.append(path_to_file)
         self.__pose_list_file = __import__(file_name_without_extension)
         sys.path.pop()
 
     @staticmethod
-    def _get_path_and_name(file_path):
+    def _get_name_and_path(file_path):
         last_slash_index = file_path.rfind("/")
         path_to_file = file_path[:last_slash_index]
         file_name = file_path[last_slash_index + 1:]

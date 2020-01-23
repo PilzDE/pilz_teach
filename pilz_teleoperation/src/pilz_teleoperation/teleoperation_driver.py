@@ -17,56 +17,11 @@ import rospy
 import copy
 import pilz_teleoperation.teleoperation_settings as _teleop_settings
 
+
 from geometry_msgs.msg import Twist, TwistStamped
 from control_msgs.msg import JointJog
 from pilz_teleoperation.srv import SetTeleopSettings, SetTeleopSettingsResponse
-
-
-class _TeleoperationTwist(Twist):
-    """ Extension of Twist class to store the required math. """
-
-    def project_on_plane(self, projection_plane):
-        first = self.linear.x
-        second = self.linear.y
-        self.linear.x, self.linear.y = 0, 0
-        setattr(self.linear, projection_plane[0], first)
-        setattr(self.linear, projection_plane[1], second)
-
-    def scale_linear_velocity(self, vel_scale):
-        self.linear.x = self.scale_value(self.linear.x, vel_scale)
-        self.linear.y = self.scale_value(self.linear.y, vel_scale)
-        self.linear.z = self.scale_value(self.linear.z, vel_scale)
-
-    def scale_angular_velocity(self, ang_vel_scale):
-        self.angular.x = self.scale_value(self.angular.x, ang_vel_scale)
-        self.angular.y = self.scale_value(self.angular.y, ang_vel_scale)
-        self.angular.z = self.scale_value(self.angular.z, ang_vel_scale)
-
-    @staticmethod
-    def scale_value(value, scale):
-        if value == 'max':
-            return 1
-        elif value == '-max':
-            return -1
-        else:
-            return value * scale
-
-
-class _TeleoperationJointJog(JointJog):
-    """ Extension of JointJog class to store required math. """
-
-    def scale_velocity(self, vel_scale):
-        self.velocities = [v * vel_scale for v in self.velocities]
-        self.displacements = [d * vel_scale for d in self.displacements]
-
-    def choose_joint_to_jog(self, current_joint):
-        if len(self.joint_names) == 0:
-            self.joint_names = [current_joint]
-
-    def copy_jog_data(self, js):
-        js.joint_names = self.joint_names
-        js.velocities = self.velocities
-        js.displacements = self.displacements
+from pilz_teleoperation import *
 
 
 class TeleoperationDriver(object):
@@ -117,32 +72,32 @@ class TeleoperationDriver(object):
         self._output_window.driver_settings_changed(copy.copy(self._settings))
 
     def set_twist_command(self, twist_):
-        self._send_updated_twist(self.__get_stamped_twist(twist_))
+        self._send_updated_twist(twist_)
 
-    def set_joint_jog_command(self, joint_jog_):
-        self._send_updated_jog(joint_jog_)
+    def _send_updated_twist(self, ts):
+        self._twist_publisher.publish(self._update_twist(ts))
 
-    def __get_stamped_twist(self, twist_=None):
-        st = TwistStamped(twist=twist_)
+    def _update_twist(self, ts):
+        project_twist_on_plane(ts, self._settings.toggled_plane)
+        scale_twist_linear_velocity(ts, self._settings.linear_velocity)
+        scale_twist_angular_velocity(ts, self._settings.angular_velocity)
+        return self._create_stamped_twist(ts)
+
+    def _create_stamped_twist(self, ts):
+        st = TwistStamped(twist=ts)
         st.header.frame_id = self._settings.toggled_target_frame
         st.header.stamp = rospy.Time.now()
         return st
 
-    def _send_updated_twist(self, ts):
-        new_twist = _TeleoperationTwist(linear=ts.twist.linear, angular=ts.twist.angular)
-        new_twist.project_on_plane(self._settings.toggled_plane)
-        new_twist.scale_linear_velocity(self._settings.linear_velocity)
-        new_twist.scale_angular_velocity(self._settings.angular_velocity)
-        ts.twist = new_twist
-        self._twist_publisher.publish(ts)
+    def set_joint_jog_command(self, joint_jog_):
+        self._send_updated_jog(joint_jog_)
 
     def _send_updated_jog(self, js):
-        new_jog = _TeleoperationJointJog(joint_names=js.joint_names,
-                                         velocities=js.velocities,
-                                         displacements=js.displacements)
-        new_jog.header.stamp = rospy.Time.now()
-        new_jog.header.frame_id = self._settings.toggled_target_frame
-        new_jog.choose_joint_to_jog(self._settings.toggled_joint)
-        new_jog.copy_jog_data(js)
-        new_jog.scale_velocity(self._settings.angular_velocity)
-        self._jog_publisher.publish(new_jog)
+        self._jog_publisher.publish(self._update_jog(js))
+
+    def _update_jog(self, js):
+        js.header.stamp = rospy.Time.now()
+        js.header.frame_id = self._settings.toggled_target_frame
+        choose_joint_to_jog(js, self._settings.toggled_joint)
+        scale_joint_velocity(js, self._settings.angular_velocity)
+        return js

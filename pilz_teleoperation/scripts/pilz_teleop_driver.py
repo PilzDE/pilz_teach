@@ -26,8 +26,7 @@ def main(stdscr):
     """
     win = pilz_teleoperation.TerminalTextWindow(stdscr)
     pilz_teleoperation.TeleoperationDriver(win)
-    while not rospy.is_shutdown():
-        rospy.sleep(1)
+    rospy.spin()
 
 
 if __name__ == '__main__':

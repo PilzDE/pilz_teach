@@ -19,6 +19,8 @@ import rospy
 import curses
 import pilz_teleoperation
 
+KEY_READ_HZ = 50  # As Fast as possible to stop as soond as possible (keyboard repeat rate default is only ~ 11 chars/s)
+
 
 def main(stdscr):
     """ Callback for curses
@@ -29,7 +31,7 @@ def main(stdscr):
     driver = pilz_teleoperation.TeleoperationDriver(win)
     key = pilz_teleoperation.CursesKeyInput(stdscr, driver=driver)
 
-    rate = rospy.Rate(50)
+    rate = rospy.Rate(KEY_READ_HZ)
     while not rospy.is_shutdown():
         key.resolve_key_input()
         rate.sleep()

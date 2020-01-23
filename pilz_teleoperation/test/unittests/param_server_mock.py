@@ -14,10 +14,9 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import yaml
-import os
+from rospkg import RosPack
 
-_package_dir = "/".join(os.path.dirname(os.path.realpath(__file__)).split("/")[:-2])
-with open(_package_dir + "/config/teleoperation_settings.yaml") as f:
+with open(RosPack().get_path("pilz_teleoperation") + "/config/teleoperation_settings.yaml") as f:
     setting_defaults = yaml.load(f.read())
 
 

@@ -12,12 +12,10 @@ This Package contains files to launch the prbt with moveit_jog_arm and tork-a/fa
 
 - Clone this package into the src directory `git clone https://github.com/PilzDE/pilz_teach` 
 
-- Get tork-a/fake_joint for simulation but because of unpackaged dependencies only build fake_joint_driver:
+- Get a fake_joint_driver:
 
   ```shell script
-  git clone https://github.com/tork-a/fake_joint
-  touch fake_joint/fake_joint/CATKIN_IGNORE
-  touch fake_joint/fake_joint_launch/CATKIN_IGNORE
+  sudo apt install ros-melodic-fake-joint-driver
   ```
 
 - In `~/catkin_ws` install all the dependencies `rosdep install -y --from-paths src --ignore-src`

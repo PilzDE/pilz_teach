@@ -17,7 +17,6 @@ This Package contains files to launch the prbt with moveit_jog_arm and tork-a/fa
   ```shell script
   sudo apt install ros-melodic-fake-joint-driver
   ```
-
 - In `~/catkin_ws` install all the dependencies `rosdep install -y --from-paths src --ignore-src`
 
 - Build the workspace e.g. using `catkin build` and `source devel/setup.bash`

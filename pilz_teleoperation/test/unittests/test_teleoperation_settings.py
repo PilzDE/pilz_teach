@@ -16,7 +16,9 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
+import yaml
 import rospy
+import rospkg
 import pytest
 from pilz_teleoperation.teleoperation_settings import TeleoperationSettings
 from param_server_mock import mocked_get_param
@@ -24,6 +26,12 @@ from pilz_teleoperation.srv import SetTeleopSettingsRequest
 
 PKG = 'pilz_teleoperation'
 
+with open(rospkg.RosPack().get_path("pilz_teleoperation") + "/config/teleoperation_settings.yaml") as f:
+    setting_defaults = yaml.load(f.read())
+
+
+def mocked_get_param(key, *args, **kwargs):
+    return setting_defaults[key[1:]]
 
 velocity_changes = [("linear_velocity", .2, SetTeleopSettingsRequest.INCREASE_LINEAR_VELOCITY, .21),
                     ("linear_velocity", 1, SetTeleopSettingsRequest.INCREASE_LINEAR_VELOCITY, 1),

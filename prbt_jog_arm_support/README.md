@@ -12,6 +12,11 @@ This Package contains files to launch the prbt with moveit_jog_arm and tork-a/fa
 
 - Clone this package into the src directory `git clone https://github.com/PilzDE/pilz_teach` 
 
+- Get a fake_joint_driver:
+
+  ```shell script
+  sudo apt install ros-melodic-fake-joint-driver
+  ```
 - In `~/catkin_ws` install all the dependencies `rosdep install -y --from-paths src --ignore-src`
 
 - Build the workspace e.g. using `catkin build` and `source devel/setup.bash`

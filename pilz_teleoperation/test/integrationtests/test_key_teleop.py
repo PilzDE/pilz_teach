@@ -17,7 +17,7 @@
 import rospy
 import unittest
 
-from geometry_msgs.msg import TwistStamped
+from geometry_msgs.msg import TwistStamped, Twist, Vector3
 from control_msgs.msg import JointJog
 
 
@@ -27,28 +27,50 @@ class TestKeyTeleoperation(unittest.TestCase):
     """
     def __init__(self, *args, **kwargs):
         super(TestKeyTeleoperation, self).__init__(*args, **kwargs)
-        self.twist_published = False
+        self.jog_published = False
 
     def setUp(self):
         rospy.loginfo("SetUp called...")
+        self.jog_published = False
 
     def tearDown(self):
         rospy.loginfo("TearDown called...")
 
     def callback(self, msg):
-        self.twist_published = True
+        self.jog_published = True
 
-    def test_startup(self):
+    def test_startup_twist(self):
         """ Test if driver gets started """
-        subscriber_twist = rospy.Subscriber('/jog_server/delta_jog_cmds', TwistStamped, self.callback)
-        subscriber_joint = rospy.Subscriber('/jog_server/joint_delta_jog_cmds', JointJog, self.callback)
+        rospy.Subscriber('/jog_server/delta_jog_cmds', TwistStamped, self.callback)
+        self._publish_jog_request(request=Twist(linear=Vector3(y=1)),
+                                  topic='/key_input/twist')
+        self._assert_jog_was_published()
 
-        timeout = rospy.Time().now() + rospy.Duration(secs=10)
-        while not rospy.is_shutdown() and not self.twist_published:
+    def _publish_jog_request(self, request, topic):
+        publisher_twist = rospy.Publisher(topic, type(request), queue_size=1)
+        self._wait_for_subscriber_to_listen(publisher_twist)
+        publisher_twist.publish(request)
+
+    def _wait_for_subscriber_to_listen(self, publisher_twist):
+        self._assert_event_happens_within_timeout(lambda: publisher_twist.get_num_connections() < 1,
+                                                  secs=5,
+                                                  msg="subscriber did not come up")
+
+    def _assert_event_happens_within_timeout(self, event, secs, msg):
+        timeout = rospy.Time().now() + rospy.Duration(secs=secs)
+        while not rospy.is_shutdown() and event():
             rospy.sleep(0.1)
-            self.assertTrue(rospy.Time().now() < timeout, "driver did not publish")
-        subscriber_twist.unregister()
-        subscriber_joint.unregister()
+            self.assertTrue(rospy.Time().now() < timeout, msg)
+
+    def _assert_jog_was_published(self):
+        self._assert_event_happens_within_timeout(lambda: self.jog_published, secs=5, msg="driver did not publish")
+
+    def test_startup_joint(self):
+        """ Test if driver gets started """
+        rospy.Subscriber('/jog_server/joint_delta_jog_cmds', JointJog, self.callback)
+        self._publish_jog_request(request=JointJog(joint_names=["joint1"], velocities=[1]),
+                                  topic='/key_input/joint_jog')
+        self._assert_jog_was_published()
 
 
 if __name__ == '__main__':

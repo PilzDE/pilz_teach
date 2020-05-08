@@ -78,6 +78,7 @@ class TeleoperationDriver(object):
         self._twist_publisher.publish(self._update_twist(ts))
 
     def _update_twist(self, ts):
+        ts = copy.copy(ts)
         project_twist_on_plane(ts, self._settings.toggled_plane)
         scale_twist_linear_velocity(ts, self._settings.linear_velocity)
         scale_twist_angular_velocity(ts, self._settings.angular_velocity)
@@ -96,6 +97,7 @@ class TeleoperationDriver(object):
         self._jog_publisher.publish(self._update_jog(js))
 
     def _update_jog(self, js):
+        js = copy.copy(js)
         js.header.stamp = rospy.Time.now()
         js.header.frame_id = self._settings.toggled_target_frame
         choose_joint_to_jog(js, self._settings.toggled_joint)

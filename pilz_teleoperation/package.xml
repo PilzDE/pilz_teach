@@ -5,7 +5,6 @@
   <description>Teleoperation (jogging) for a manipulator e.g. using a keyboard interface</description>
 
   <maintainer email="j.schleicher@pilz.de">Joachim Schleicher</maintainer>
-  <maintainer email="p.cheray@pilz.de">Philippe Cheray</maintainer>
   <maintainer email="r.feistenauer@pilz.de">Richard Feistenauer</maintainer>
   <maintainer email="t.vetter@pilz.de">Tobias Vetter</maintainer>
 

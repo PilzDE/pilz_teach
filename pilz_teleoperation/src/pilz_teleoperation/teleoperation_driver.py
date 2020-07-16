@@ -78,7 +78,7 @@ class TeleoperationDriver(object):
         self._twist_publisher.publish(self._update_twist(ts))
 
     def _update_twist(self, ts):
-        ts = copy.copy(ts)
+        ts = copy.deepcopy(ts)
         project_twist_on_plane(ts, self._settings.toggled_plane)
         scale_twist_linear_velocity(ts, self._settings.linear_velocity)
         scale_twist_angular_velocity(ts, self._settings.angular_velocity)

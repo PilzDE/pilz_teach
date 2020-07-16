@@ -1,6 +1,4 @@
-#! /usr/bin/env python
-
-# Copyright (c) 2019 Pilz GmbH & Co. KG
+# Copyright (c) 2020 Pilz GmbH & Co. KG
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published by
@@ -15,23 +13,12 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import rospy
-import curses
-import pilz_teleoperation
+import yaml
+from rospkg import RosPack
+
+with open(RosPack().get_path("pilz_teleoperation") + "/config/teleoperation_settings.yaml") as f:
+    setting_defaults = yaml.load(f.read())
 
 
-def main(stdscr):
-    """ Callback for curses
-    :param stdscr: terminal screen
-    """
-    win = pilz_teleoperation.TerminalTextWindow(stdscr)
-    pilz_teleoperation.TeleoperationDriver(win)
-    rospy.spin()
-
-
-if __name__ == '__main__':
-    rospy.init_node('pilz_teleop_driver')
-    try:
-        curses.wrapper(main)
-    except rospy.ROSInterruptException:
-        pass
+def mocked_get_param(key, *args, **kwargs):
+    return setting_defaults[key[1:]]

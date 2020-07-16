@@ -16,22 +16,16 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import rospy
-import curses
-import pilz_teleoperation
-
-
-def main(stdscr):
-    """ Callback for curses
-    :param stdscr: terminal screen
-    """
-    win = pilz_teleoperation.TerminalTextWindow(stdscr)
-    pilz_teleoperation.TeleoperationDriver(win)
-    rospy.spin()
+from pilz_teleoperation import PoseFileTFPublisher
 
 
 if __name__ == '__main__':
-    rospy.init_node('pilz_teleop_driver')
+    rospy.init_node("pose_visualisation")
     try:
-        curses.wrapper(main)
+        file_path = rospy.get_param("~file_path")
+        pb = PoseFileTFPublisher()
+        pb.publish_poses_from_file_loop(file_path)
+    except ImportError:
+        rospy.logerr("path invalid!")
     except rospy.ROSInterruptException:
         pass

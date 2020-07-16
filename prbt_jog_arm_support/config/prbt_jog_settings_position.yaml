@@ -31,7 +31,7 @@ move_group_name:  manipulator  # Often 'manipulator' or 'arm'
 planning_frame: world  # The MoveIt! planning frame. Often 'base_link'
 
 ## Stopping behaviour
-incoming_command_timeout:  2  # Stop jogging if X seconds elapse without a new cmd
+incoming_command_timeout: 0.08  # Stop jogging if X seconds elapse without a new cmd
 # If 0, republish commands forever even if the robot is stationary. Otherwise, specify num. to publish.
 # Important because ROS may drop some messages and we need the robot to halt reliably.
 num_outgoing_halt_msgs_to_publish: 4
@@ -45,11 +45,18 @@ joint_limit_margin: 0.1 # added as a buffer to joint limits [radians]. If moving
 cartesian_command_in_topic: jog_server/delta_jog_cmds  # Topic for incoming Cartesian twist commands
 joint_command_in_topic: jog_server/joint_delta_jog_cmds # Topic for incoming joint angle commands
 joint_topic:  joint_states
-warning_topic: jog_server/halted # Publish boolean warnings to this topic
+status_topic: jog_server/halted # Publish boolean warnings to this topic
 command_out_topic: joint_group_position_controller/command # Publish outgoing commands here
 
 ## Collision checking
 check_collisions: true # Check collisions?
 collision_check_rate: 5 # [Hz] Collision-checking can easily bog down a CPU if done too often.
-collision_proximity_threshold: 0.01 # Start decelerating when a collision is this far [m]
-hard_stop_collision_proximity_threshold: 0.0005 # Stop when a collision is this far [m]
+self_collision_proximity_threshold: 0.01 # Start decelerating when a self-collision is this far [m]
+scene_collision_proximity_threshold: 0.05 # Start decelerating when a scene collision is this far [m]
+# Two collision check algorithms are available:
+# "threshold_distance" begins slowing down when nearer than a specified distance. Good if you want to tune collision thresholds manually.
+# "stop_distance" stops if a collision is nearer than the worst-case stopping distance and the distance is decreasing. Requires joint acceleration limits
+collision_check_type: stop_distance
+# Parameters for "stop_distance"-type collision checking
+collision_distance_safety_factor: 1000 # Must be >= 1. A large safety factor is recommended to account for latency
+min_allowable_collision_distance: 0.01 # Stop if a collision is closer than this [m]

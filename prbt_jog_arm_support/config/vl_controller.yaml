@@ -25,4 +25,4 @@
 manipulator_vl_group_controller:
   type: velocity_controllers/JointGroupVelocityController
   joints: [prbt_joint_1, prbt_joint_2, prbt_joint_3, prbt_joint_4, prbt_joint_5, prbt_joint_6]
-  required_drive_mode: 2
+  required_drive_mode: 3

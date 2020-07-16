@@ -37,7 +37,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   <!-- Run the "real robot" interface nodes -->
   <group unless="$(arg sim)">
     <include file="$(find prbt_support)/launch/robot.launch">
-      <arg name="sto" value="None" /> <!-- TODO -->
+      <arg name="iso10218_support" value="False" /> <!-- TODO -->
       <arg name="load_robot_description" value="false" />
       <arg name="gripper" value="$(arg gripper)" />
       <arg name="canopen_config" value="$(find prbt_jog_arm_support)/config/vl_driver.yaml" />

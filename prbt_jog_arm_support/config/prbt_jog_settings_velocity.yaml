@@ -7,10 +7,10 @@ use_gazebo: true # Whether the robot is started in a Gazebo simulation environme
 robot_link_command_frame:  world  # TF frame that incoming cmds are given in
 command_in_type: "speed_units" # "unitless"> in the range [-1:1], as if from joystick. "speed_units"> cmds are in m/s and rad/s
 scale: # Only used if command_in_type=="unitless"
-  linear:  0.6  # Max linear velocity. Meters per publish_period. Units is [m/s]
-  rotational:  0.3 # Max angular velocity. Rads per publish_period. Units is [rad/s]
-  joint: 1.3  # Max joint angular/linear velocity. Rads or Meters per publish period. Units is [rad/s] or [m/s].
-low_pass_filter_coeff: 200.  # Larger --> trust the filtered data more, trust the measurements less.
+  linear:  0.6  # Max linear velocity. Units is [m/s]
+  rotational:  0.3 # Max angular velocity. Units is [rad/s]
+  joint: 1.3  # Max joint angular/linear velocity. Units is [rad/s] or [m/s].
+low_pass_filter_coeff: 50.  # Larger --> trust the filtered data more, trust the measurements less.
 
 ## Properties of outgoing commands
 publish_period: 0.008  # 1/Nominal publish rate [seconds]
@@ -31,10 +31,10 @@ move_group_name:  manipulator  # Often 'manipulator' or 'arm'
 planning_frame: world  # The MoveIt! planning frame. Often 'base_link'
 
 ## Stopping behaviour
-incoming_command_timeout:  2  # Stop jogging if X seconds elapse without a new cmd
+incoming_command_timeout:  0.05  # Stop jogging if X seconds elapse without a new cmd
 # If 0, republish commands forever even if the robot is stationary. Otherwise, specify num. to publish.
 # Important because ROS may drop some messages and we need the robot to halt reliably.
-num_outgoing_halt_msgs_to_publish: 4
+num_outgoing_halt_msgs_to_publish: 2
 
 ## Configure handling of singularities and joint limits
 lower_singularity_threshold:  17  # Start decelerating when the condition number hits this (close to singularity)
@@ -50,6 +50,13 @@ command_out_topic: /prbt/manipulator_vl_group_controller/command # Publish outgo
 
 ## Collision checking
 check_collisions: true # Check collisions?
-collision_check_rate: 5 # [Hz] Collision-checking can easily bog down a CPU if done too often.
+collision_check_rate: 20 # [Hz] Collision-checking can easily bog down a CPU if done too often.
 collision_proximity_threshold: 0.01 # Start decelerating when a collision is this far [m]
-hard_stop_collision_proximity_threshold: 0.0005 # Stop when a collision is this far [m]
+hard_stop_collision_proximity_threshold: 0.05 # Stop when a collision is this far [m]
+# Two collision check algorithms are available:
+# "threshold_distance" begins slowing down when nearer than a specified distance. Good if you want to tune collision thresholds manually.
+# "stop_distance" stops if a collision is nearer than the worst-case stopping distance and the distance is decreasing. Requires joint acceleration limits
+collision_check_type: stop_distance
+# Parameters for "stop_distance"-type collision checking
+collision_distance_safety_factor: 1000 # Must be >= 1. A large safety factor is recommended to account for latency
+min_allowable_collision_distance: 0.01 # Stop if a collision is closer than this [m]

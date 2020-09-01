@@ -53,7 +53,7 @@ class TeleoperationInput(object):
     def _try_to_load_config(self, config_path):
         try:
             with open(config_path, "r") as file_:
-                bindings = yaml.load(file_.read())
+                bindings = yaml.load(file_.read(), Loader=yaml.SafeLoader)
                 for k, v in bindings["MovementBindings"].items():
                     self.MOVE_BINDINGS[self._get_key_symbol(k)] = \
                         message_converter.convert_dictionary_to_ros_message('geometry_msgs/Twist', v)
